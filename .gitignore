@@ -1,6 +1,9 @@
 #don't include build
 build/*
 
+#don't include Debug
+Debug/*
+
 #don't include .vscode
 .vscode/*
 
