@@ -1,8 +1,9 @@
 cmake_minimum_required(VERSION 3.5.0)
-project(Image-Processing-Laboratory VERSION 0.1.0 LANGUAGES C CXX)
+project(Image-Processing-Laboratory VERSION 0.1.0 LANGUAGES CXX)
+
+add_subdirectory(lib)
 
 add_executable(Image-Processing-Laboratory src/main.cpp)
-
 
 include(CTest)
 enable_testing()
