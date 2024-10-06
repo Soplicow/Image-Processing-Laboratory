@@ -7,11 +7,6 @@ using namespace cimg_library;
 
 class Elementary {
 public:
-    // Constructor
-    Elementary();
-
-    // Destructor
-    ~Elementary();
 
     static CImg<unsigned char> brightnessMod(CImg<unsigned char> image, int brightness);
 

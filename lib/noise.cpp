@@ -1,14 +1,8 @@
-#include "noise.h"
+#include "../include/noise.h"
+#include "../include/CImg.h"
 #include <algorithm>
 
 using namespace cimg_library;
-Noise::Noise() {
-    // Constructor
-}
-
-Noise::~Noise() {
-    // Destructor
-}
 
 CImg<unsigned char> Noise::medianFilter(CImg<unsigned char> image, int windowHorizontal, int windowVertical) {
     CImg<unsigned char> filteredImage(image.width(), image.height(), 1, 3, 0);
@@ -49,9 +43,9 @@ CImg<unsigned char> Noise::harmonicMeanFilter(CImg<unsigned char> image, int win
         for (int i = 0; i < windowSize; i++) {
             sum += window[i];
         }
-        filteredImage(x, y, 0) = 1.0f / sum;
-        filteredImage(x, y, 1) = 1.0f / sum;
-        filteredImage(x, y, 2) = 1.0f / sum;
+        filteredImage(x, y, 0) = static_cast<byte>(1.0f / sum);
+        filteredImage(x, y, 1) = static_cast<byte>(1.0f / sum);
+        filteredImage(x, y, 2) = static_cast<byte>(1.0f / sum);
 
         delete[] window;
     }

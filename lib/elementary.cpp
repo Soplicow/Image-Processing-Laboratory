@@ -1,13 +1,7 @@
-#include "elementary.h"
+#include "../include/elementary.h"
+#include "../include/CImg.h"
 #include <algorithm>
 
-Elementary::Elementary() {
-    // Constructor
-}
-
-Elementary::~Elementary() {
-    // Destructor
-}
 
 CImg<unsigned char> Elementary::brightnessMod(CImg<unsigned char> image, int brightness) {
     CImg<unsigned char> modifiedImage(image.width(), image.height(), 1, 3, 0);

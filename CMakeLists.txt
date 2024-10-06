@@ -1,15 +1,17 @@
-cmake_minimum_required(VERSION 3.5.0)
-project(Image-Processing-Laboratory VERSION 0.1.0 LANGUAGES CXX)
+cmake_minimum_required(VERSION 3.28)
+project(ImageProcessing)
 
-add_subdirectory(lib)
-
-add_executable(Image-Processing-Laboratory src/main.cpp)
-
-include(CTest)
 enable_testing()
 
-set(CPACK_PROJECT_NAME ${PROJECT_NAME})
-set(CPACK_PROJECT_VERSION ${PROJECT_VERSION})
-include(CPack)
+# Dodaj katalogi do ścieżki include
+include_directories(${CIMG_INCLUDE_DIRS})
+include_directories(${CMAKE_SOURCE_DIR}/include)
 
-SET(EXECUTABLE_OUTPUT_PATH ${PROJECT_SOURCE_DIR})
+# Dodaj podprojekt z folderu lib
+add_subdirectory(lib)
+
+# Dodaj plik wykonywalny
+add_executable(main src/main.cpp)
+
+# Połącz bibliotekę z plikiem wykonywalnym
+target_link_libraries(main lib ${CIMG_LIBRARIES})

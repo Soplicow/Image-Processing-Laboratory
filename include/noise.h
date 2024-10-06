@@ -6,11 +6,6 @@
 using namespace cimg_library;
 class Noise {
 public:
-    // Constructor
-    Noise();
-
-    // Destructor
-    ~Noise();
 
     static CImg<unsigned char> medianFilter(CImg<unsigned char> image, int windowHorizontal, int windowVertical);
 

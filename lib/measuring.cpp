@@ -1,14 +1,8 @@
-#include "measuring.h"
+#include "../include/measuring.h"
 #include "../include/CImg.h"
 #include <cmath>
 
 using namespace cimg_library;
-
-Measuring::Measuring() {
-}
-
-Measuring::~Measuring() {
-}
 
 float Measuring::signalToNoiseRatio(CImg<unsigned char> originalImage, CImg<unsigned char> modifiedImage) {
     float snr = 0.0;

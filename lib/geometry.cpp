@@ -1,13 +1,7 @@
-#include "geometry.h"
+#include "../include/geometry.h"
+#include "../include/CImg.h"
+
 using namespace cimg_library;
-
-Geometry::Geometry() {
-    // Constructor
-}
-
-Geometry::~Geometry() {
-    // Destructor
-}
 
 CImg<unsigned char> Geometry::horizontalFlip(CImg<unsigned char> image) {
     CImg<unsigned char> flippedImage(image.width(), image.height(), 1, 3, 0);

@@ -16,6 +16,9 @@ public:
     static CImg<unsigned char> imageShrinking(CImg<unsigned char> image, int factor);
 
     static CImg<unsigned char> imageEnlargement(CImg<unsigned char> image, int factor);
+
+private:
+    // Add any private members if needed
 };
 
 #endif // GEOMETRY_H
