@@ -7,11 +7,15 @@ enable_testing()
 include_directories(${CIMG_INCLUDE_DIRS})
 include_directories(${CMAKE_SOURCE_DIR}/include)
 
-# Dodaj podprojekt z folderu lib
+# Dodaj podprojekty
 add_subdirectory(lib)
+#add_subdirectory(tests)
 
 # Dodaj plik wykonywalny
-add_executable(main src/main.cpp)
+add_executable(imageProcessing src/main.cpp)
 
 # Połącz bibliotekę z plikiem wykonywalnym
-target_link_libraries(main lib ${CIMG_LIBRARIES})
+target_link_libraries(imageProcessing PRIVATE lib ${CIMG_LIBRARIES})
+
+# Change the output directory of the build to a folder outside the build directory
+set(CMAKE_RUNTIME_OUTPUT_DIRECTORY ${CMAKE_SOURCE_DIR}/bin)

@@ -34,7 +34,7 @@ int main(int argc, char* argv[]) {
                 try {
                         int brightness = std::stoi(argv[3]);
                         modifiedImage = Elementary::brightnessMod(modifiedImage, brightness);
-                        modifiedImage.save_bmp("output.bmp");
+                        
                 } catch (std::invalid_argument& e) {
                         std::cerr << "Invalid argument: " << argv[2] << std::endl;
                         return 0;
@@ -53,6 +53,7 @@ int main(int argc, char* argv[]) {
                         std::cerr << "Invalid argument: " << argv[2] << std::endl;
                         return 0;
                 }
+
         } else if (command == "--negative") {
                 try {
                         modifiedImage = Elementary::negative(modifiedImage);
@@ -60,6 +61,7 @@ int main(int argc, char* argv[]) {
                         std::cerr << "error" << std::endl;
                         return 0;
                 }
+
         } else if (command == "--hflip") {
                 try {
                         modifiedImage = Geometry::horizontalFlip(modifiedImage);
@@ -67,13 +69,15 @@ int main(int argc, char* argv[]) {
                         std::cerr << "error" << std::endl;
                         return 0;
                 }
-        } else if (command == "-vflip") {
+
+        } else if (command == "--vflip") {
                 try {
                         modifiedImage = Geometry::verticalFlip(modifiedImage);
                 } catch (std::invalid_argument& e) {
                         std::cerr << "error" << std::endl;
                         return 0;
                 }
+
         } else if (command == "--dflip") {
                 try {
                         modifiedImage = Geometry::diagonalFlip(modifiedImage);
@@ -81,6 +85,7 @@ int main(int argc, char* argv[]) {
                         std::cerr << "error" << std::endl;
                         return 0;
                 }
+
         } else if (command == "--shrink") {
                 if (argc < 4) {
                         std::cerr << "Usage: " << "--shrink " << "[-factor=2]" << std::endl;
@@ -94,6 +99,7 @@ int main(int argc, char* argv[]) {
                         std::cerr << "Invalid argument: " << argv[2] << std::endl;
                         return 0;
                 }
+
         } else if (command == "--enlarge") {
                 if (argc < 4) {
                         std::cerr << "Usage: " << "--enlarge " << "[-factor=2]" << std::endl;
@@ -107,6 +113,7 @@ int main(int argc, char* argv[]) {
                         std::cerr << "Invalid argument: " << argv[2] << std::endl;
                         return 0;
                 }
+
         } else if (command == "--median") {
                 if (argc < 5) {
                         std::cerr << "Usage: " << "--median " << "[-horizontal=3] " << "[-vertical=3]" << std::endl;
@@ -120,6 +127,7 @@ int main(int argc, char* argv[]) {
                 } catch (std::invalid_argument& e) {
                         std::cerr << "Invalid argument: " << argv[3] << " or " << argv[4] << std::endl;
                 }
+
         } else if (command == "--harmonic") {
                 if (argc < 5) {
                         std::cerr << "Usage: " << "--harmonic " << "[-horizontal=3] " << "[-vertical=3]" << std::endl;
@@ -133,6 +141,8 @@ int main(int argc, char* argv[]) {
                 } catch (std::invalid_argument& e) {
                         std::cerr << "Invalid argument: " << argv[2] << " or " << argv[3] << std::endl;
                 }
+                // check if this one works properly
+
         } else if (command == "--snr") {
                 if (argc < 4) {
                         std::cerr << "Usage: " << "--snr " << "<image.bmp>" << std::endl;
@@ -142,8 +152,11 @@ int main(int argc, char* argv[]) {
                 CImg<unsigned char> modifiedImage(argv[3]);
                 float snr = Measuring::signalToNoiseRatio(originalImage, modifiedImage);
                 std::cout << "Signal to Noise Ratio: " << snr << std::endl;
+                return 0;
+
         } else {
                 std::cerr << "Invalid command: " << command << std::endl;
                 return 0;
         }
+        modifiedImage.save_bmp("output.bmp");
 }
