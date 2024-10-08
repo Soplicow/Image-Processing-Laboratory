@@ -7,12 +7,14 @@ using namespace cimg_library;
 class Noise {
 public:
 
-    static CImg<unsigned char> medianFilter(CImg<unsigned char> image, int windowHorizontal, int windowVertical);
+    static CImg<unsigned char> minFilter(CImg<unsigned char> image, int windowSize);
 
-    static CImg<unsigned char> harmonicMeanFilter(CImg<unsigned char> image, int windowHorizontal, int windowVertical);
+    static CImg<unsigned char> maxFilter(CImg<unsigned char> image, int windowSize);
+
+    static CImg<unsigned char> adaptiveMedianFilter(CImg<unsigned char> image, int windowSize, int maxWindowSize);
 
 private:
-    // Add any private members if needed
+
 };
 
 #endif // NOISE_H

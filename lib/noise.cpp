@@ -1,53 +1,131 @@
-#include "../include/noise.h"
-#include "../include/CImg.h"
+#include "Noise.h"
+#include "GlobalHelper.h"
 #include <algorithm>
+#include <stdexcept>
+#include <vector>
 
 using namespace cimg_library;
 
-CImg<unsigned char> Noise::medianFilter(CImg<unsigned char> image, int windowHorizontal, int windowVertical) {
-    CImg<unsigned char> filteredImage(image.width(), image.height(), 1, 3, 0);
-    cimg_forXY(image, x, y) {
-        int windowSize = windowHorizontal * windowVertical;
-        int* window = new int[windowSize];
-        int windowIndex = 0;
-        for (int i = x - windowHorizontal / 2; i <= x + windowHorizontal / 2; i++) {
-            for (int j = y - windowVertical / 2; j <= y + windowVertical / 2; j++) {
-                if (i >= 0 && i < image.width() && j >= 0 && j < image.height()) {
-                    window[windowIndex++] = image(i, j, 0);
+CImg<unsigned char> Noise::minFilter(CImg<unsigned char> image, int windowSize) {
+    if (windowSize % 2 == 0) {
+        throw std::invalid_argument("Window size must be odd");
+    }
+
+    CImg<unsigned char> filteredImage = image;
+
+    for (int c = 0; c < image.spectrum(); ++c) { // Iterate over each color channel
+        for (int x = windowSize / 2; x < image.width() - windowSize / 2; ++x) {
+            for (int y = windowSize / 2; y < image.height() - windowSize / 2; ++y) {
+                int halfWindowSize = windowSize / 2;
+                int windowArea = windowSize * windowSize;
+                int* window = new int[windowArea];
+                int windowIndex = 0;
+
+                for (int i = x - halfWindowSize; i <= x + halfWindowSize; ++i) {
+                    for (int j = y - halfWindowSize; j <= y + halfWindowSize; ++j) {
+                        window[windowIndex++] = image(i, j, 0, c);
+                    }
                 }
+
+                std::sort(window, window + windowIndex);
+                filteredImage(x, y, 0, c) = window[0]; // Minimum value
+
+                delete[] window;
             }
         }
-        std::sort(window, window + windowSize);
-        filteredImage(x, y, 0) = window[windowSize / 2];
-        filteredImage(x, y, 1) = window[windowSize / 2];
-        filteredImage(x, y, 2) = window[windowSize / 2];
-        delete[] window;
     }
+
     return filteredImage;
 }
 
-CImg<unsigned char> Noise::harmonicMeanFilter(CImg<unsigned char> image, int windowHorizontal, int windowVertical) {
-    CImg<unsigned char> filteredImage(image.width(), image.height(), 1, 3, 0);
-    cimg_forXY(image, x, y) {
-        int windowSize = windowHorizontal * windowVertical;
-        float* window = new float[windowSize];
-        int windowIndex = 0;
-        for (int i = x - windowHorizontal / 2; i <= x + windowHorizontal / 2; i++) {
-            for (int j = y - windowVertical / 2; j <= y + windowVertical / 2; j++) {
-                if (i >= 0 && i < image.width() && j >= 0 && j < image.height()) {
-                    window[windowIndex++] = 1.0f / image(i, j, 0);
+CImg<unsigned char> Noise::maxFilter(CImg<unsigned char> image, int windowSize) {
+    if (windowSize % 2 == 0) {
+        throw std::invalid_argument("Window size must be odd");
+    }
+
+    CImg<unsigned char> filteredImage = image;
+
+    for (int c = 0; c < image.spectrum(); ++c) { // Iterate over each color channel
+        for (int x = windowSize / 2; x < image.width() - windowSize / 2; ++x) {
+            for (int y = windowSize / 2; y < image.height() - windowSize / 2; ++y) {
+                int halfWindowSize = windowSize / 2;
+                int windowArea = windowSize * windowSize;
+                int* window = new int[windowArea];
+                int windowIndex = 0;
+
+                for (int i = x - halfWindowSize; i <= x + halfWindowSize; ++i) {
+                    for (int j = y - halfWindowSize; j <= y + halfWindowSize; ++j) {
+                        window[windowIndex++] = image(i, j, 0, c);
+                    }
+                }
+
+                std::sort(window, window + windowIndex);
+                filteredImage(x, y, 0, c) = window[windowIndex - 1]; // Maximum value
+
+                delete[] window;
+            }
+        }
+    }
+
+    return filteredImage;
+}
+
+CImg<unsigned char> Noise::adaptiveMedianFilter(CImg<unsigned char> image, int windowSize, int maxWindowSize) {
+    // TODO: THIS FUNCTION IS NOT WORKING PROPERLY 
+    if (windowSize % 2 == 0) {
+        throw std::invalid_argument("Window size must be odd");
+    }
+
+    CImg<unsigned char> filteredImage = image;
+
+    for (int c = 0; c < image.spectrum(); ++c) { // Iterate over each color channel
+        for (int x = maxWindowSize / 2; x < image.width() - maxWindowSize / 2; ++x) {
+            for (int y = maxWindowSize / 2; y < image.height() - maxWindowSize / 2; ++y) {
+                int currentWindowSize = windowSize;
+                bool pixelProcessed = false;
+
+                while (!pixelProcessed) {
+                    int halfWindowSize = currentWindowSize / 2;
+                    std::vector<int> window;
+
+                    for (int i = x - halfWindowSize; i <= x + halfWindowSize; ++i) {
+                        for (int j = y - halfWindowSize; j <= y + halfWindowSize; ++j) {
+                            window.push_back(image(i, j, 0, c));
+                        }
+                    }
+
+                    std::sort(window.begin(), window.end());
+                    int zmin = window.front();
+                    int zmax = window.back();
+                    int zmed = window[window.size() / 2];
+                    int zxy = image(x, y, 0, c);
+
+                    // Stage A
+                    int A1 = zmed - zmin;
+                    int A2 = zmed - zmax;
+                    if (A1 > 0 && A2 < 0) {
+                        // Stage B
+                        int B1 = zxy - zmin;
+                        int B2 = zxy - zmax;
+                        if (B1 > 0 && B2 < 0) {
+                            filteredImage(x, y, 0, c) = zxy;
+                        } else {
+                            filteredImage(x, y, 0, c) = zmed;
+                        }
+                        pixelProcessed = true;
+                    } else {
+                        // Increase window size if possible
+                        if (currentWindowSize < maxWindowSize) {
+                            currentWindowSize += 2;
+                        } else {
+                            filteredImage(x, y, 0, c) = zxy;
+                            pixelProcessed = true;
+                        }
+                    }
                 }
             }
         }
-        float sum = 0.0f;
-        for (int i = 0; i < windowSize; i++) {
-            sum += window[i];
-        }
-        filteredImage(x, y, 0) = static_cast<byte>(1.0f / sum);
-        filteredImage(x, y, 1) = static_cast<byte>(1.0f / sum);
-        filteredImage(x, y, 2) = static_cast<byte>(1.0f / sum);
-
-        delete[] window;
     }
+    
     return filteredImage;
 }
