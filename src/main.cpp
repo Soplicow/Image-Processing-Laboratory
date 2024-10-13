@@ -9,7 +9,8 @@ using namespace cimg_library;
 
 int main(int argc, char* argv[]) {
         if (argc < 2) {
-                std::cerr << "Usage: " << "<image.bmp> " << "--command " << "[-argument=value [...]]" << std::endl;
+                std::cerr << "Usage: " << "--input <image.bmp> " << "--output <image.bmp>" 
+                <<"--command " << "[-argument=value [...]]" << std::endl;
                 return 0;
         }
 
@@ -17,8 +18,19 @@ int main(int argc, char* argv[]) {
         CImg<unsigned char> modifiedImage;
         char* output_name;
 
-        int argumentIterator = 2; // current argument
         std::string command;
+
+        for (char** pargv = argv + 1; *pargv != argv[argc]; pargv++) {
+                if (std::string(*pargv).find("--file") != std::string::npos) {
+                        try {
+                                std::cout << "Writing results to: " << *(pargv + 1) << std::endl;
+                                freopen(*(pargv + 1), "a", stdout);
+                        } catch (const std::exception& e) {
+                                std::cerr << "Error: " << e.what() << std::endl;
+                                return 0;
+                        }
+                }
+        }
 
         // pargv is a pointer to the current argument
         for (char** pargv = argv + 1; *pargv != argv[argc]; pargv++) {
@@ -40,7 +52,8 @@ int main(int argc, char* argv[]) {
                                 std::cerr << "Usage: " << "--output " << "<output_name.bmp>" << std::endl;
                                 return 0;
                         }
-
+                        
+                        std::cout << "Output image: " << *(pargv + 1) << std::endl;
                         output_name = *(pargv + 1);
                 }
         }
@@ -53,6 +66,11 @@ int main(int argc, char* argv[]) {
                 }
 
                 if (std::string(*pargv).find("--output") != std::string::npos) {
+                        pargv++;
+                        continue;
+                }
+
+                if (std::string(*pargv).find("--file") != std::string::npos) {
                         pargv++;
                         continue;
                 }
@@ -208,16 +226,10 @@ int main(int argc, char* argv[]) {
                 } 
                 
                 if (std::string(*pargv).find("--snr") != std::string::npos) {
-                                if (*(pargv + 1) == argv[argc]) {
-                                std::cerr << "Usage: " << "--snr " << "<image.bmp>" << std::endl;
-                                return 0;
-                        }
-
                         try {
-                                modifiedImage.load_bmp(*(pargv + 1));
+                                modifiedImage.load_bmp(output_name);
                                 float snr = Measuring::signalToNoiseRatio(originalImage, modifiedImage);
                                 std::cout << "Signal to Noise Ratio: " << snr << std::endl;
-                                return 0;
                         } catch (const CImgIOException& e) {
                                 std::cerr << "Error loading image: " << e.what() << std::endl;
                                 return 0;
@@ -225,16 +237,10 @@ int main(int argc, char* argv[]) {
                 }
 
                 if (std::string(*pargv).find("--mse") != std::string::npos) {
-                        if (*(pargv + 1) == argv[argc]) {
-                                std::cerr << "Usage: " << "--mse " << "<image.bmp>" << std::endl;
-                                return 0;
-                        }
-
                         try {
-                                modifiedImage.load_bmp(*(pargv + 1));
+                                modifiedImage.load_bmp(output_name);
                                 float mse = Measuring::meanSquareError(originalImage, modifiedImage);
                                 std::cout << "Mean Square Error: " << mse << std::endl;
-                                return 0;
                         } catch (const CImgIOException& e) {
                                 std::cerr << "Error loading image: " << e.what() << std::endl;
                                 return 0;
@@ -242,16 +248,10 @@ int main(int argc, char* argv[]) {
                 }
 
                 if (std::string(*pargv).find("--pmse") != std::string::npos) {
-                        if (*(pargv + 1) == argv[argc]) {
-                                std::cerr << "Usage: " << "--pmse " << "<image.bmp>" << std::endl;
-                                return 0;
-                        }
-
                         try {
-                                modifiedImage.load_bmp(*(pargv + 1));
+                                modifiedImage.load_bmp(output_name);
                                 float pmse = Measuring::peakMeanSquareError(originalImage, modifiedImage);
                                 std::cout << "Peak Mean Square Error: " << pmse << std::endl;
-                                return 0;
                         } catch (const CImgIOException& e) {
                                 std::cerr << "Error loading image: " << e.what() << std::endl;
                                 return 0;
@@ -259,33 +259,21 @@ int main(int argc, char* argv[]) {
                 }
 
                 if (std::string(*pargv).find("--psnr") != std::string::npos) {
-                        if (*(pargv + 1) == argv[argc]) {
-                                std::cerr << "Usage: " << "--psnr " << "<image.bmp>" << std::endl;
-                                return 0;
-                        }
-
                         try {
-                                modifiedImage.load_bmp(*(pargv + 1));
+                                modifiedImage.load_bmp(output_name);
                                 float psnr = Measuring::peakSignalToNoiseRatio(originalImage, modifiedImage);
                                 std::cout << "Peak Signal to Noise Ratio: " << psnr << std::endl;
-                                return 0;
                         } catch (const CImgIOException& e) {
                                 std::cerr << "Error loading image: " << e.what() << std::endl;
                                 return 0;
                         }
                 }
 
-                if (std::string(*pargv).find("--maxdiff") != std::string::npos) {
-                        if (*(pargv + 1) == argv[argc]) {
-                                std::cerr << "Usage: " << "--maxdiff " << "<image.bmp>" << std::endl;
-                                return 0;
-                        }
-
+                if (std::string(*pargv).find("--md") != std::string::npos) {
                         try {
-                                modifiedImage.load_bmp(*(pargv + 1));
+                                modifiedImage.load_bmp(output_name);
                                 float maxDiff = Measuring::maximumDifference(originalImage, modifiedImage);
                                 std::cout << "Maximum Difference: " << maxDiff << std::endl;
-                                return 0;
                         } catch (const CImgIOException& e) {
                                 std::cerr << "Error loading image: " << e.what() << std::endl;
                                 return 0;
@@ -293,26 +281,31 @@ int main(int argc, char* argv[]) {
                 }
 
                 if (std::string(*pargv).find("--help") != std::string::npos) {
-                        std::cout << "Available commands:\n"
-                                << "--input <image.bmp>\n"
-                                << "--output <output_name.bmp>\n"
-                                << "--brightness [-value=50]\n"
-                                << "--contrast [-value=1.5]\n"
-                                << "--negative\n"
-                                << "--hflip\n"
-                                << "--vflip\n"
-                                << "--dflip\n"
-                                << "--shrink [-factor=2]\n"
-                                << "--enlarge [-factor=2]\n"
-                                << "--max [-size=3]\n"
-                                << "--min [-size=3]\n"
-                                << "--adaptive [-size=3] [-maxSize=7]\n"
-                                << "--snr <image.bmp>\n"
-                                << "--mse <image.bmp>\n"
-                                << "--pmse <image.bmp>\n"
-                                << "--psnr <image.bmp>\n"
-                                << "--maxdiff <image.bmp>\n";
-                        return 0;
+                        try {
+                                std::cout << "Available commands:\n"
+                                        << "--input <image.bmp>\n"
+                                        << "--output <output_name.bmp>\n"
+                                        << "--brightness [-value=50]\n"
+                                        << "--contrast [-value=1.5]\n"
+                                        << "--negative\n"
+                                        << "--hflip\n"
+                                        << "--vflip\n"
+                                        << "--dflip\n"
+                                        << "--shrink [-factor=2]\n"
+                                        << "--enlarge [-factor=2]\n"
+                                        << "--max [-size=3]\n"
+                                        << "--min [-size=3]\n"
+                                        << "--adaptive [-size=3] [-maxSize=7]\n"
+                                        << "--snr <image.bmp>\n"
+                                        << "--mse <image.bmp>\n"
+                                        << "--pmse <image.bmp>\n"
+                                        << "--psnr <image.bmp>\n"
+                                        << "--maxdiff <image.bmp>\n";
+                                return 0;
+                        } catch (const std::exception& e) {
+                                std::cerr << "Error displaying help: " << e.what() << std::endl;
+                                return 0;
+                        }
                 }
         }
         

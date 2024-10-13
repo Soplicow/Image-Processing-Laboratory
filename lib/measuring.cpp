@@ -25,8 +25,7 @@ float Measuring::signalToNoiseRatio(CImg<unsigned char> originalImage, CImg<unsi
 
 float Measuring::peakSignalToNoiseRatio(CImg<unsigned char> originalImage, CImg<unsigned char> modifiedImage) {
     float psnr = 0.0;
-    float mse = meanSquareError(originalImage, modifiedImage);
-    psnr = 10 * log10(pow(255, 2) / mse) / originalImage.height() * originalImage.width();
+    psnr = 20*log10(255) - 10*log10(meanSquareError(originalImage, modifiedImage));
     return psnr;
 }
 
@@ -42,6 +41,7 @@ float Measuring::meanSquareError(CImg<unsigned char> originalImage, CImg<unsigne
 float Measuring::peakMeanSquareError(CImg<unsigned char> originalImage, CImg<unsigned char> modifiedImage) {
     float pmse = 0.0;
     pmse = meanSquareError(originalImage, modifiedImage) / pow(255, 2);
+    return pmse;
 }
 
 float Measuring::maximumDifference(CImg<unsigned char> originalImage, CImg<unsigned char> modifiedImage) {

@@ -44,7 +44,7 @@ CImg<unsigned char> Geometry::imageShrinking(CImg<unsigned char> image, int fact
     for (int x = 0; x < shrunkImage.width(); x++) {
         for (int y = 0; y < shrunkImage.height(); y++) {
             for (int c = 0; c < image.spectrum(); c++) {
-                shrunkImage(x, y, 0) = image(x * factor, y * factor, c);
+                shrunkImage(x, y, c) = image(x * factor, y * factor, c);
             }
         }
     }
