@@ -12,10 +12,8 @@ CImg<unsigned char> Elementary::brightnessMod(CImg<unsigned char> image, int bri
     }
     // cast the image values to int and cap them between 0 and 255
     // and add them to modifiedImage
-    cimg_forXY(image, x, y) {    
-        modifiedImage(x, y, 0) = lookupTable[image(x, y, 0)];
-        modifiedImage(x, y, 1) = lookupTable[image(x, y, 1)];
-        modifiedImage(x, y, 2) = lookupTable[image(x, y, 2)];
+    cimg_forXYC(image, x, y, c) {    
+        modifiedImage(x, y, c) = lookupTable[image(x, y, c)];
     }
     return modifiedImage;
 }

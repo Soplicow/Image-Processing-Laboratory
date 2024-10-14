@@ -71,7 +71,6 @@ CImg<unsigned char> Noise::maxFilter(CImg<unsigned char> image, int windowSize) 
 }
 
 CImg<unsigned char> Noise::adaptiveMedianFilter(CImg<unsigned char> image, int windowSize, int maxWindowSize) {
-    // TODO: THIS FUNCTION IS NOT WORKING PROPERLY 
     if (windowSize % 2 == 0) {
         throw std::invalid_argument("Window size must be odd");
     }
