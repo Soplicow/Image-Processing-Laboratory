@@ -25,6 +25,7 @@ float Measuring::signalToNoiseRatio(CImg<unsigned char> originalImage, CImg<unsi
 
 float Measuring::peakSignalToNoiseRatio(CImg<unsigned char> originalImage, CImg<unsigned char> modifiedImage) {
     float psnr = 0.0;
+    
     psnr = 20*log10(255) - 10*log10(meanSquareError(originalImage, modifiedImage));
     return psnr;
 }

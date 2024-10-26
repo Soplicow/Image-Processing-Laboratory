@@ -25,10 +25,8 @@ CImg<unsigned char> Elementary::contrastMod(CImg<unsigned char> image, float con
         lookupTable[i] = std::min(255, std::max(0, static_cast<int>(contrast * (i - 128) + 128)));
     }
 
-    cimg_forXY(image, x, y) {
-        modifiedImage(x, y, 0) = lookupTable[image(x, y, 0)];
-        modifiedImage(x, y, 1) = lookupTable[image(x, y, 1)];
-        modifiedImage(x, y, 2) = lookupTable[image(x, y, 2)];
+    cimg_forXYC(image, x, y, c) {
+        modifiedImage(x, y, c) = lookupTable[image(x, y, c)];
     }
     return modifiedImage;
 }
@@ -40,10 +38,8 @@ CImg<unsigned char> Elementary::negative(CImg<unsigned char> image) {
         lookupTable[i] = 255 - i;
     }
 
-    cimg_forXY(image, x, y) {
-        modifiedImage(x, y, 0) = lookupTable[image(x, y, 0)];
-        modifiedImage(x, y, 1) = lookupTable[image(x, y, 1)];
-        modifiedImage(x, y, 2) = lookupTable[image(x, y, 2)];
+    cimg_forXYC(image, x, y, c) {
+        modifiedImage(x, y, c) = lookupTable[image(x, y, c)];
     }
     return modifiedImage;
 }

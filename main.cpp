@@ -1,8 +1,8 @@
-#include "../include/CImg.h" // modify the path if necessary
-#include "../include/Elementary.h"
-#include "../include/Geometry.h"
-#include "../include/Noise.h"
-#include "../include/Measuring.h"
+#include "CImg.h"
+#include "Elementary.h"
+#include "Geometry.h"
+#include "Noise.h"
+#include "Measuring.h"
 #include <iostream>
 #include <string>
 using namespace cimg_library;
@@ -20,6 +20,7 @@ int main(int argc, char* argv[]) {
 
         std::string command;
 
+        // pargv is a pointer to the current argument
         for (char** pargv = argv + 1; *pargv != argv[argc]; pargv++) {
                 if (std::string(*pargv).find("--file") != std::string::npos) {
                         try {
@@ -32,7 +33,6 @@ int main(int argc, char* argv[]) {
                 }
         }
 
-        // pargv is a pointer to the current argument
         for (char** pargv = argv + 1; *pargv != argv[argc]; pargv++) {
                 if (std::string(*pargv).find("--input") != std::string::npos) {
                         try {
@@ -296,11 +296,11 @@ int main(int argc, char* argv[]) {
                                         << "--max [-size=3]\n"
                                         << "--min [-size=3]\n"
                                         << "--adaptive [-size=3] [-maxSize=7]\n"
-                                        << "--snr <image.bmp>\n"
-                                        << "--mse <image.bmp>\n"
-                                        << "--pmse <image.bmp>\n"
-                                        << "--psnr <image.bmp>\n"
-                                        << "--maxdiff <image.bmp>\n";
+                                        << "--snr\n"
+                                        << "--mse\n"
+                                        << "--pmse\n"
+                                        << "--psnr\n"
+                                        << "--maxdiff\n";
                                 return 0;
                         } catch (const std::exception& e) {
                                 std::cerr << "Error displaying help: " << e.what() << std::endl;

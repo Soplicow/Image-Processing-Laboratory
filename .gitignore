@@ -56,3 +56,6 @@ _deps
 *.exe
 *.out
 *.app
+
+# archives
+*.zip
