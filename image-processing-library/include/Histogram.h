@@ -7,7 +7,6 @@
 #include "CImg.h"
 using namespace cimg_library;
 
-namespace ImageProcessing {
 class Histogram {
 public:
     Histogram();
@@ -21,7 +20,5 @@ public:
 private:
     std::map<uint8_t, uint32_t> histogramData;
 };
-
-} // namespace ImageProcessing
 
 #endif // HISTOGRAM_H

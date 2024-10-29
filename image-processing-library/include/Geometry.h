@@ -5,7 +5,6 @@
 
 using namespace cimg_library;
 
-namespace ImageProcessing {
 class Geometry {
 public:
     static CImg<unsigned char> horizontalFlip(CImg<unsigned char> image);
@@ -21,7 +20,5 @@ public:
 private:
     // Add any private members if needed
 };
-
-} // namespace ImageProcessing
 
 #endif // GEOMETRY_H

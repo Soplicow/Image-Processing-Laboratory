@@ -281,31 +281,26 @@ int main(int argc, char* argv[]) {
                 }
 
                 if (std::string(*pargv).find("--help") != std::string::npos) {
-                        try {
-                                std::cout << "Available commands:\n"
-                                        << "--input <image.bmp>\n"
-                                        << "--output <output_name.bmp>\n"
-                                        << "--brightness [-value=50]\n"
-                                        << "--contrast [-value=1.5]\n"
-                                        << "--negative\n"
-                                        << "--hflip\n"
-                                        << "--vflip\n"
-                                        << "--dflip\n"
-                                        << "--shrink [-factor=2]\n"
-                                        << "--enlarge [-factor=2]\n"
-                                        << "--max [-size=3]\n"
-                                        << "--min [-size=3]\n"
-                                        << "--adaptive [-size=3] [-maxSize=7]\n"
-                                        << "--snr\n"
-                                        << "--mse\n"
-                                        << "--pmse\n"
-                                        << "--psnr\n"
-                                        << "--maxdiff\n";
-                                return 0;
-                        } catch (const std::exception& e) {
-                                std::cerr << "Error displaying help: " << e.what() << std::endl;
-                                return 0;
-                        }
+                        std::cout << "Available commands:\n"
+                                << "--input <image.bmp>\n"
+                                << "--output <output_name.bmp>\n"
+                                << "--brightness [-value=50]\n"
+                                << "--contrast [-value=1.5]\n"
+                                << "--negative\n"
+                                << "--hflip\n"
+                                << "--vflip\n"
+                                << "--dflip\n"
+                                << "--shrink [-factor=2]\n"
+                                << "--enlarge [-factor=2]\n"
+                                << "--max [-size=3]\n"
+                                << "--min [-size=3]\n"
+                                << "--adaptive [-size=3] [-maxSize=7]\n"
+                                << "--snr\n"
+                                << "--mse\n"
+                                << "--pmse\n"
+                                << "--psnr\n"
+                                << "--maxdiff\n";
+                        return 0;
                 }
         }
         

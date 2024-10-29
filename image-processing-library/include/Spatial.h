@@ -5,7 +5,6 @@
 
 using namespace cimg_library;
 
-namespace ImageProcessing {
 
 class Spatial {
 public:
@@ -20,8 +19,11 @@ public:
 
 private:
     void convolve(CImg<unsigned char>& image, const std::array<int, 9>& mask);
-};
 
-} // namespace ImageProcessing
+    const std::array<int, 9> maskN = {1, 1, 1, 1, -2, 1, -1, -1, -1};
+    const std::array<int, 9> maskNE = {1, 1, 1, -1, -2, 1, -1, -1, 1};
+    const std::array<int, 9> maskE = {-1, 1, 1, -1, -2, 1, -1, 1, 1};
+    const std::array<int, 9> maskSE = {-1, -1, 1, -1, -2, 1, 1, 1, 1};
+};
 
 #endif // SPATIAL_H
