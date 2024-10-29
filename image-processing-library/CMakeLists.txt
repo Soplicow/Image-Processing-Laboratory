@@ -6,6 +6,8 @@ set(SOURCE_FILES
     src/Measuring.cpp
     src/Noise.cpp
     src/Histogram.cpp
+    src/Spatial.cpp
+    src/Characteristics.cpp
 )
 
 add_library(image-processing-library STATIC ${SOURCE_FILES})

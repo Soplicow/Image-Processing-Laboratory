@@ -4,6 +4,8 @@
 #include "../include/CImg.h"
 
 using namespace cimg_library;
+
+namespace ImageProcessing {
 class Noise {
 public:
 
@@ -16,5 +18,7 @@ public:
 private:
 
 };
+
+} // namespace ImageProcessing
 
 #endif // NOISE_H

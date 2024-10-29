@@ -7,6 +7,7 @@
 #include "CImg.h"
 using namespace cimg_library;
 
+namespace ImageProcessing {
 class Histogram {
 public:
     Histogram();
@@ -15,9 +16,12 @@ public:
     void computeHistogram(CImg<unsigned char> image, int channel);
     // void displayHistogram() const;
     CImg<unsigned char> returnHistogramImage() const;
+    CImg<unsigned char> exponentialFPDF(CImg<unsigned char> image, int minBrightness, int maxBrightness, float alpha);
 
 private:
     std::map<uint8_t, uint32_t> histogramData;
 };
+
+} // namespace ImageProcessing
 
 #endif // HISTOGRAM_H

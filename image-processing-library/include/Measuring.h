@@ -4,6 +4,8 @@
 #include "../include/CImg.h"
 
 using namespace cimg_library;
+
+namespace ImageProcessing {
 class Measuring {
 public:
 
@@ -20,5 +22,7 @@ public:
 private:
     // Add private members if needed
 };
+
+} // namespace ImageProcessing
 
 #endif // MEASURING_H
