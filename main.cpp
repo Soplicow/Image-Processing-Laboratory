@@ -18,14 +18,13 @@ int main(int argc, char* argv[]) {
         CImg<unsigned char> modifiedImage;
         char* output_name;
 
-        std::string command;
-
         // pargv is a pointer to the current argument
         for (char** pargv = argv + 1; *pargv != argv[argc]; pargv++) {
                 if (std::string(*pargv).find("--file") != std::string::npos) {
                         try {
                                 std::cout << "Writing results to: " << *(pargv + 1) << std::endl;
                                 freopen(*(pargv + 1), "a", stdout);
+                                std::cout << "\n";
                         } catch (const std::exception& e) {
                                 std::cerr << "Error: " << e.what() << std::endl;
                                 return 0;
@@ -106,6 +105,7 @@ int main(int argc, char* argv[]) {
                                 std::cerr << "Invalid argument: " << *(pargv + 1) << std::endl;
                                 return 0;
                         }
+                        continue;
                 } 
                 
                 if (std::string(*pargv).find("--negative") != std::string::npos) {
@@ -115,6 +115,7 @@ int main(int argc, char* argv[]) {
                                 std::cerr << "Error while modifying image" << std::endl;
                                 return 0;
                         }
+                        continue;
                 } 
                 
                 if (std::string(*pargv).find("--hflip") != std::string::npos) {
@@ -124,6 +125,7 @@ int main(int argc, char* argv[]) {
                                 std::cerr << "Error while modifying image" << std::endl;
                                 return 0;
                         }
+                        continue;
                 } 
                 
                 if (std::string(*pargv).find("--vflip") != std::string::npos) {
@@ -133,6 +135,7 @@ int main(int argc, char* argv[]) {
                                 std::cerr << "Error while modifying image" << std::endl;
                                 return 0;
                         }
+                        continue;
                 } 
                 
                 if (std::string(*pargv).find("--dflip") != std::string::npos) {
@@ -142,6 +145,7 @@ int main(int argc, char* argv[]) {
                                 std::cerr << "Error while modifying image" << std::endl;
                                 return 0;
                         }
+                        continue;
                 } 
                 
                 if (std::string(*pargv).find("--shrink") != std::string::npos) {
@@ -158,6 +162,7 @@ int main(int argc, char* argv[]) {
                                 std::cerr << "Invalid argument: " << *(pargv + 1) << std::endl;
                                 return 0;
                         }
+                        continue;
                 } 
                 
                 if (std::string(*pargv).find("--enlarge") != std::string::npos) {
@@ -174,6 +179,7 @@ int main(int argc, char* argv[]) {
                                 std::cerr << "Invalid argument: " << *(pargv + 1) << std::endl;
                                 return 0;
                         }
+                        continue;
                 } 
 
                 if (std::string(*pargv).find("--max") != std::string::npos) {
@@ -189,7 +195,8 @@ int main(int argc, char* argv[]) {
                         } catch (std::invalid_argument& e) {
                                 std::cerr << "Invalid argument: " << *(pargv + 1) << std::endl;
                                 return 0;
-                        }     
+                        }
+                        continue;     
                 } 
                 
                 if (std::string(*pargv).find("--min") != std::string::npos) {
@@ -206,6 +213,7 @@ int main(int argc, char* argv[]) {
                                 std::cerr << "Invalid argument: " << *(pargv + 1) << std::endl;
                                 return 0;
                         }
+                        continue;
                 } 
 
                 if (std::string(*pargv).find("--adaptive") != std::string::npos) {
@@ -223,6 +231,7 @@ int main(int argc, char* argv[]) {
                                 std::cerr << "Invalid argument: " << *(pargv + 1) << " or " << *(pargv + 2) << std::endl;
                                 return 0;
                         }
+                        continue;
                 } 
                 
                 if (std::string(*pargv).find("--snr") != std::string::npos) {
@@ -234,6 +243,7 @@ int main(int argc, char* argv[]) {
                                 std::cerr << "Error loading image: " << e.what() << std::endl;
                                 return 0;
                         }
+                        continue;
                 }
 
                 if (std::string(*pargv).find("--mse") != std::string::npos) {
@@ -245,6 +255,7 @@ int main(int argc, char* argv[]) {
                                 std::cerr << "Error loading image: " << e.what() << std::endl;
                                 return 0;
                         }
+                        continue;
                 }
 
                 if (std::string(*pargv).find("--pmse") != std::string::npos) {
@@ -256,6 +267,7 @@ int main(int argc, char* argv[]) {
                                 std::cerr << "Error loading image: " << e.what() << std::endl;
                                 return 0;
                         }
+                        continue;
                 }
 
                 if (std::string(*pargv).find("--psnr") != std::string::npos) {
@@ -267,6 +279,7 @@ int main(int argc, char* argv[]) {
                                 std::cerr << "Error loading image: " << e.what() << std::endl;
                                 return 0;
                         }
+                        continue;
                 }
 
                 if (std::string(*pargv).find("--md") != std::string::npos) {
@@ -278,6 +291,7 @@ int main(int argc, char* argv[]) {
                                 std::cerr << "Error loading image: " << e.what() << std::endl;
                                 return 0;
                         }
+                        continue;
                 }
 
                 if (std::string(*pargv).find("--help") != std::string::npos) {
