@@ -17,6 +17,8 @@ public:
     // Method to apply a spatial filter to an image
     CImg<unsigned char> extractionOfDetails(CImg<unsigned char> image, const char* mask);
 
+    CImg<unsigned char> optimizedExtractionOfDetailsN(CImg<unsigned char> image);
+
 private:
     void convolve(CImg<unsigned char>& image, const std::array<int, 9>& mask);
 
