@@ -8,7 +8,7 @@ CImg<unsigned char> Elementary::brightnessMod(CImg<unsigned char> image, int bri
     CImg<unsigned char> modifiedImage = GlobalHelper::createEmptyImage(image.width(), image.height());
     std::map<int, int> lookupTable;
     for (int i = 0; i < 256; ++i) {
-        lookupTable[i] = std::min(255, std::max(0, i + brightness));
+        lookupTable[i] = std::clamp(i + brightness, 0, 255);
     }
     // cast the image values to int and cap them between 0 and 255
     // and add them to modifiedImage
@@ -22,7 +22,7 @@ CImg<unsigned char> Elementary::contrastMod(CImg<unsigned char> image, float con
     CImg<unsigned char> modifiedImage = GlobalHelper::createEmptyImage(image.width(), image.height());
     std::map<int, int> lookupTable;
     for (int i = 0; i < 256; ++i) {
-        lookupTable[i] = std::min(255, std::max(0, static_cast<int>(contrast * (i - 128) + 128)));
+        lookupTable[i] = std::clamp(static_cast<int>(contrast * (i - 128) + 128), 0, 255);
     }
 
     cimg_forXYC(image, x, y, c) {
