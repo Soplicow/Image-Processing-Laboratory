@@ -6,7 +6,8 @@ set(SOURCE_FILES
     src/Measuring.cpp
     src/Noise.cpp
     src/Histogram.cpp
-    src/Spatial.cpp
+    src/LinearSpatial.cpp
+    src/NonLinearSpatial.cpp
     src/Characteristics.cpp
 )
 

@@ -20,16 +20,20 @@ add_executable(imageProcessingTests_task1
                     test_geometry.cpp
 )
 
-add_custom_command(TARGET imageProcessingTests_task1 POST_BUILD
-    COMMAND ${CMAKE_COMMAND} -E copy
-            ${CMAKE_SOURCE_DIR}/tests/test_image.bmp
-            $<TARGET_FILE_DIR:imageProcessingTests_task1>/test_image.bmp
-)
-
 catch_discover_tests(imageProcessingTests_task1)
 
 add_executable(imageProcessingTests_task2 
                     test_histogram.cpp
+                    test_linearSpatial.cpp
+                    test_nonLinearSpatial.cpp
+)
+
+catch_discover_tests(imageProcessingTests_task2)
+
+add_custom_command(TARGET imageProcessingTests_task1 POST_BUILD
+    COMMAND ${CMAKE_COMMAND} -E copy
+            ${CMAKE_SOURCE_DIR}/tests/test_image.bmp
+            $<TARGET_FILE_DIR:imageProcessingTests_task1>/test_image.bmp
 )
 
 target_link_libraries(imageProcessingTests_task1 
