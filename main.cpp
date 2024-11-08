@@ -3,6 +3,11 @@
 #include "Geometry.h"
 #include "Noise.h"
 #include "Measuring.h"
+#include "Characteristics.h"
+#include "LinearSpatial.h"
+#include "NonLinearSpatial.h"
+#include "Histogram.h"
+
 #include <iostream>
 #include <string>
 using namespace cimg_library;
@@ -294,6 +299,171 @@ int main(int argc, char* argv[]) {
                         continue;
                 }
 
+                if (std::string(*pargv).find("--histogram") != std::string::npos) {
+                        if (*(pargv + 1) == argv[argc] || *(pargv + 2) == argv[argc]) {
+                                std::cerr << "Usage: " << "--histogram " << "[-channel=2] " << "[-histogram_output = *.bmp]" << std::endl;
+                                return 0;
+                        }
+                        try {
+                                int channel = std::stoi(*(pargv + 1));
+                                char* histogram_output = *(pargv + 2);
+                                CImg<unsigned char> histogramImage = Histogram::returnHistogramImage(modifiedImage, channel);
+                                histogramImage.save_bmp(histogram_output);
+                                pargv += 2;
+                        } catch (const CImgIOException& e) {
+                                std::cerr << "Error loading image: " << e.what() << std::endl;
+                                return 0;
+                        }
+                        continue;
+                }
+
+                if (std::string(*pargv).find("--hexponent") != std::string::npos) {
+                        if (*(pargv + 1) == argv[argc] || *(pargv + 2) == argv[argc] || *(pargv + 3) == argv[argc]) {
+                                std::cerr << "Usage: " << "--hexponent " << "[-min_brightness=30] " 
+                                                << "[-max_brightness=250]" << "[-alpha=3.5]" << std::endl;
+                                return 0;
+                        }
+                        try {
+                                int minBrightness = std::stoi(*(pargv + 1));
+                                int maxBrightness = std::stoi(*(pargv + 2));
+                                float alpha = std::stof(*(pargv + 3));
+                                modifiedImage = Histogram::exponentialFPDF(originalImage, minBrightness, maxBrightness, alpha);
+                                pargv += 3;
+                        } catch (const CImgIOException& e) {
+                                std::cerr << "Error loading image: " << e.what() << std::endl;
+                                return 0;
+                        }
+                        continue;
+                }
+
+                if (std::string(*pargv).find("--cmean") != std::string::npos) {
+                        try {
+                                float mean = Characteristics::mean(originalImage);
+                                std::cout << "Mean: " << mean << std::endl;
+                        } catch (const CImgIOException& e) {
+                                std::cerr << "Error loading image: " << e.what() << std::endl;
+                                return 0;
+                        }
+                        continue;
+                }
+
+                if (std::string(*pargv).find("--cvariance") != std::string::npos) {
+                        try {
+                                float variance = Characteristics::variance(originalImage);
+                                std::cout << "Variance: " << variance << std::endl;
+                        } catch (const CImgIOException& e) {
+                                std::cerr << "Error loading image: " << e.what() << std::endl;
+                                return 0;
+                        }
+                        continue;
+                }
+
+                if (std::string(*pargv).find("--cstdev") != std::string::npos) {
+                        try {
+                                float stdDev = Characteristics::standardDeviation(originalImage);
+                                std::cout << "Standard Deviation: " << stdDev << std::endl;
+                        } catch (const CImgIOException& e) {
+                                std::cerr << "Error loading image: " << e.what() << std::endl;
+                                return 0;
+                        }
+                        continue;
+                }
+
+                if (std::string(*pargv).find("--cvarcoi") != std::string::npos) {
+                        try {
+                                float vcoeff1 = Characteristics::variationCoefficient_1(originalImage);
+                                std::cout << "Variation Coefficient 1: " << vcoeff1 << std::endl;
+                        } catch (const CImgIOException& e) {
+                                std::cerr << "Error loading image: " << e.what() << std::endl;
+                                return 0;
+                        }
+                        continue;
+                }
+
+                if (std::string(*pargv).find("--cvarcoii") != std::string::npos) {
+                        try {
+                                float vcoeff2 = Characteristics::variationCoefficient_2(originalImage);
+                                std::cout << "Variation Coefficient 2: " << vcoeff2 << std::endl;
+                        } catch (const CImgIOException& e) {
+                                std::cerr << "Error loading image: " << e.what() << std::endl;
+                                return 0;
+                        }
+                        continue;
+                }
+
+                if (std::string(*pargv).find("--casyco") != std::string::npos) {
+                        try {
+                                float assym = Characteristics::assymetryCoefficient(originalImage);
+                                std::cout << "Asymmetry Coefficient: " << assym << std::endl;
+                        } catch (const CImgIOException& e) {
+                                std::cerr << "Error loading image: " << e.what() << std::endl;
+                                return 0;
+                        }
+                        continue;
+                }
+
+                if (std::string(*pargv).find("--cflatco") != std::string::npos) {
+                        try {
+                                float flat = Characteristics::flatteningCoefficient(originalImage);
+                                std::cout << "Flattening Coefficient: " << flat << std::endl;
+                        } catch (const CImgIOException& e) {
+                                std::cerr << "Error loading image: " << e.what() << std::endl;
+                                return 0;
+                        }
+                        continue;
+                }
+
+                if (std::string(*pargv).find("--centropy") != std::string::npos) {
+                        try {
+                                float entropy = Characteristics::entropy(originalImage);
+                                std::cout << "Entropy: " << entropy << std::endl;
+                        } catch (const CImgIOException& e) {
+                                std::cerr << "Error loading image: " << e.what() << std::endl;
+                                return 0;
+                        }
+                        continue;
+                }
+
+                if (std::string(*pargv).find("--orosenfeld") != std::string::npos) {
+                        if (*(pargv + 1) == argv[argc]) {
+                                std::cerr << "Usage: " << "--rosenfeld " << "[-power=2]" << std::endl;
+                                return 0;
+                        }
+
+                        try {
+                                unsigned int power = std::stoi(*(pargv + 1));
+                                modifiedImage = NonLinearSpatial::rosenfeldOperator(modifiedImage, power);
+                                pargv++;
+                        } catch (std::invalid_argument& e) {
+                                std::cerr << "Invalid argument: " << *(pargv + 1) << std::endl;
+                                return 0;
+                        }
+                        continue;
+                }
+
+                if (std::string(*pargv).find("--sexdeti") != std::string::npos) {
+                        if (*(pargv + 1) == argv[argc]) {
+                                std::cerr << "Usage: " << "--sexdeti " << "[-mask=NE]f" << std::endl;
+                                return 0;
+                        }
+
+                        try {
+                                char* mask = *(pargv + 1);
+                                LinearSpatial linearSpatial;
+                                if (std::string(mask) == "N" != std::string::npos) {
+                                        modifiedImage = linearSpatial.optimizedExtractionOfDetailsN(modifiedImage);
+                                } else {
+                                        modifiedImage = linearSpatial.extractionOfDetails(modifiedImage, mask);
+                                }
+                                pargv++;
+                        } catch (std::invalid_argument& e) {
+                                std::cerr << "Invalid argument: " << *(pargv + 1) << std::endl;
+                                return 0;
+                        }
+                        continue;
+                }
+
+
                 if (std::string(*pargv).find("--help") != std::string::npos) {
                         std::cout << "Available commands:\n"
                                 << "--input <image.bmp>\n"
@@ -313,7 +483,20 @@ int main(int argc, char* argv[]) {
                                 << "--mse\n"
                                 << "--pmse\n"
                                 << "--psnr\n"
-                                << "--maxdiff\n";
+                                << "--maxdiff\n"
+                                << "--histogram [-channel=2] [-histogram_output=*.bmp]\n"
+                                << "--hexponent [-min_brightness=30] [-max_brightness=250] [-alpha=3.5]\n"
+                                << "--cmean\n"
+                                << "--cvariance\n"
+                                << "--cstdev\n"
+                                << "--cvarcoi\n"
+                                << "--cvarcoii\n"
+                                << "--casyco\n"
+                                << "--cflatco\n"
+                                << "--centropy\n"
+                                << "--orosenfeld [-power=2]\n"
+                                << "--sexdeti [-mask=NE]\n"
+                                << "--help\n";
                         return 0;
                 }
         }
