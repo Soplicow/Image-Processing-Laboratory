@@ -12,21 +12,21 @@ public:
     // Destructor
     ~Characteristics();
 
-    float mean(CImg<unsigned char> image);
+    static float mean(CImg<unsigned char> image);
 
-    float variance(CImg<unsigned char> image);
+    static float variance(CImg<unsigned char> image);
 
-    float standardDeviation(CImg<unsigned char> image);
+    static float standardDeviation(CImg<unsigned char> image);
 
-    float variationCoefficient_1(CImg<unsigned char> image);
+    static float variationCoefficient_1(CImg<unsigned char> image);
 
-    float variationCoefficient_2(CImg<unsigned char> image);
+    static float variationCoefficient_2(CImg<unsigned char> image);
 
-    float assymetryCoefficient(CImg<unsigned char> image);
+    static float assymetryCoefficient(CImg<unsigned char> image);
 
-    float flatteningCoefficient(CImg<unsigned char> image);
+    static float flatteningCoefficient(CImg<unsigned char> image);
 
-    float entropy(CImg<unsigned char> image);
+    static float entropy(CImg<unsigned char> image);
 
 private:
 

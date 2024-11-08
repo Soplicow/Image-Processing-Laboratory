@@ -12,13 +12,13 @@ public:
     Histogram();
     ~Histogram();
 
-    void computeHistogram(CImg<unsigned char> image, int channel);
     // void displayHistogram() const;
-    CImg<unsigned char> returnHistogramImage() const;
-    CImg<unsigned char> exponentialFPDF(CImg<unsigned char> image, int minBrightness, int maxBrightness, float alpha);
+    static CImg<unsigned char> returnHistogramImage(CImg<unsigned char> image, int channel);
+    static CImg<unsigned char> exponentialFPDF(CImg<unsigned char> image, int minBrightness, int maxBrightness, float alpha);
+    static std::map<uint8_t, uint32_t> computeHistogram(CImg<unsigned char> image, int channel);
 
 private:
-    std::map<uint8_t, uint32_t> histogramData;
+
 };
 
 #endif // HISTOGRAM_H
