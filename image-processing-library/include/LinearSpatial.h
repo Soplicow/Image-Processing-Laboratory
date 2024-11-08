@@ -5,14 +5,13 @@
 
 using namespace cimg_library;
 
-
-class Spatial {
+class LinearSpatial {
 public:
     // Constructor
-    Spatial();
+    LinearSpatial();
 
     // Destructor
-    ~Spatial();
+    ~LinearSpatial();
 
     // Method to apply a spatial filter to an image
     CImg<unsigned char> extractionOfDetails(CImg<unsigned char> image, const char* mask);
