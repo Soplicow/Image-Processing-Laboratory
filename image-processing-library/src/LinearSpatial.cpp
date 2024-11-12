@@ -27,7 +27,7 @@ LinearSpatial::~LinearSpatial() {
 CImg<unsigned char> LinearSpatial::extractionOfDetails(CImg<unsigned char> image, const char* mask) {
     CImg<unsigned char> newImage = image;
     if (strcmp(mask, "N") == 0) {
-        convolve(newImage, maskN);
+        optimizedExtractionOfDetailsN(newImage);
     } else if (strcmp(mask, "NE") == 0) {
         convolve(newImage, maskNE);
     } else if (strcmp(mask, "E") == 0) {
