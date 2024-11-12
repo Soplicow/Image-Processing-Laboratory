@@ -1,5 +1,6 @@
 #include "NonLinearSpatial.h"
 #include <algorithm>
+#include <cstdint>
 
 NonLinearSpatial::NonLinearSpatial() {
 }
@@ -26,17 +27,17 @@ CImg<unsigned char> NonLinearSpatial::rosenfeldOperator(CImg<unsigned char> imag
         int leftP = std::min(x, P);
         int rightP = std::min(image.width() - x - 1, P);
 
-        int sum = 0;
+        float sum = 0;
 
         for (int i = -leftP; i < 0; i++) {
             sum -= image(x + i, y, c);
         }
 
-        for (int j = 1; j < rightP; j++) {
+        for (int j = 0; j < rightP; j++) {
             sum += image(x + j, y, c);
         }
 
-        newImage(x, y, c) = std::clamp(sum / (leftP + rightP + 1), 0, 255);
+        newImage(x, y, c) = static_cast<uint8_t>(std::clamp(sum / (leftP + rightP + 1), 0.0f, 255.0f));
     }
 
     return newImage;
