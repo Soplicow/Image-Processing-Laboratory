@@ -7,6 +7,7 @@
 #include "LinearSpatial.h"
 #include "NonLinearSpatial.h"
 #include "Histogram.h"
+#include <chrono>
 
 #include <iostream>
 #include <string>
@@ -327,6 +328,7 @@ int main(int argc, char* argv[]) {
                                 int minBrightness = std::stoi(*(pargv + 1));
                                 int maxBrightness = std::stoi(*(pargv + 2));
                                 float alpha = std::stof(*(pargv + 3));
+
                                 modifiedImage = Histogram::exponentialFPDF(originalImage, minBrightness, maxBrightness, alpha);
                                 pargv += 3;
                         } catch (const CImgIOException& e) {
@@ -369,7 +371,7 @@ int main(int argc, char* argv[]) {
                         continue;
                 }
 
-                if (std::string(*pargv).find("--cvarcoi") != std::string::npos) {
+                if (std::string(*pargv).find("--cvarcoi") != std::string::npos && std::string(*pargv).find("--cvarcoii") == std::string::npos) {
                         try {
                                 float vcoeff1 = Characteristics::variationCoefficient_1(originalImage);
                                 std::cout << "Variation Coefficient 1: " << vcoeff1 << std::endl;
@@ -443,18 +445,21 @@ int main(int argc, char* argv[]) {
 
                 if (std::string(*pargv).find("--sexdeti") != std::string::npos) {
                         if (*(pargv + 1) == argv[argc]) {
-                                std::cerr << "Usage: " << "--sexdeti " << "[-mask=NE]f" << std::endl;
+                                std::cerr << "Usage: " << "--sexdeti " << "[-mask=NE]" << std::endl;
                                 return 0;
                         }
 
                         try {
                                 char* mask = *(pargv + 1);
+                                std::cout << mask << std::endl;
+                                
                                 LinearSpatial linearSpatial;
-                                if (std::string(mask) == "N" != std::string::npos) {
-                                        modifiedImage = linearSpatial.optimizedExtractionOfDetailsN(modifiedImage);
-                                } else {
-                                        modifiedImage = linearSpatial.extractionOfDetails(modifiedImage, mask);
-                                }
+
+                                auto start = std::chrono::high_resolution_clock::now();
+                                modifiedImage = linearSpatial.extractionOfDetails(modifiedImage, mask);
+                                auto end = std::chrono::high_resolution_clock::now();
+                                std::cout << "Elapsed time: " << std::chrono::duration_cast<std::chrono::milliseconds>(end - start).count() << "ms" << std::endl;
+
                                 pargv++;
                         } catch (std::invalid_argument& e) {
                                 std::cerr << "Invalid argument: " << *(pargv + 1) << std::endl;

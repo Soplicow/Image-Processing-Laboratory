@@ -1,5 +1,6 @@
 #include "Histogram.h"
 #include "GlobalHelper.h"
+#include <stdexcept>
 
 Histogram::Histogram() {
     
@@ -45,25 +46,36 @@ CImg<unsigned char> Histogram::returnHistogramImage(CImg<unsigned char> image, i
 }
 
 CImg<unsigned char> Histogram::exponentialFPDF(CImg<unsigned char> image, int minBrightness, int maxBrightness, float alpha) {
+    if (alpha <= 0) {
+        throw std::invalid_argument("Alpha must be greater than 0");
+    }
+
+    if (minBrightness < 0 || minBrightness > 255) {
+        throw std::invalid_argument("Min brightness must be between 0 and 255");
+    }
+
+    if (maxBrightness < 0 || maxBrightness > 255) {
+        throw std::invalid_argument("Max brightness must be between 0 and 255");
+    }
+
     unsigned int totalPixels = image.width() * image.height();
 
     CImg<unsigned char> fpdfImage = GlobalHelper::createEmptyImage(image.width(), image.height());
     for (int c = 0; c < image.spectrum(); ++c) {
         std::map<uint8_t, uint32_t> histogramData = computeHistogram(image, c);
 
-        std::map<uint8_t, uint32_t> cumulativeHistogram;
-        for (int x = 0; x < 256; ++x) {
-            for (int y = 0; y <= x; ++y) {
-                cumulativeHistogram[x] += histogramData[y];
-            }
+        std::vector<float> cumulativeHistogram(256, 0.0f); //vectors are apparently faster than maps
+        cumulativeHistogram[0] = histogramData[0];
+        for (int i = 1; i < 256; ++i) {
+            cumulativeHistogram[i] = cumulativeHistogram[i - 1] + histogramData[i];
         }
 
         cimg_forXY(image, x, y) {
-            uint8_t pixelValue = image(x, y, 0, c);
+            uint8_t pixelValue = image(x, y, c);
             float cumulativeSum = cumulativeHistogram[pixelValue];
 
             float newPixelValue = minBrightness - (1.0f / alpha) * std::log(1 - (1.0f / totalPixels) * cumulativeSum);
-            fpdfImage(x, y, 0, c) = static_cast<uint8_t>(std::clamp(newPixelValue, static_cast<float>(minBrightness), static_cast<float>(maxBrightness)));
+            fpdfImage(x, y, c) = static_cast<uint8_t>(std::clamp(newPixelValue, static_cast<float>(minBrightness), static_cast<float>(maxBrightness)));
         }
     }
 
