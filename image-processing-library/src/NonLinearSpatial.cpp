@@ -1,6 +1,8 @@
 #include "NonLinearSpatial.h"
 #include <algorithm>
 #include <cstdint>
+#include <GlobalHelper.h>
+#include <vector>
 
 NonLinearSpatial::NonLinearSpatial() {
 }
@@ -8,36 +10,34 @@ NonLinearSpatial::NonLinearSpatial() {
 NonLinearSpatial::~NonLinearSpatial() {
 }
 
-/**
- * @brief Applies the Rosenfeld operator to the given image.
- *
- * The Rosenfeld operator is a non-linear spatial filter that processes each pixel
- * by averaging the values of its neighboring pixels within a specified power range.
- *
- * @param image The input image to be processed.
- * @param power The power value that determines the range of neighboring pixels to consider.
- *              The range is calculated as 2^power.
- * @return A new image with the Rosenfeld operator applied.
- */
 CImg<unsigned char> NonLinearSpatial::rosenfeldOperator(CImg<unsigned char> image, unsigned int power) {
-    CImg<unsigned char> newImage = image;
+    CImg<unsigned char> newImage = GlobalHelper::createEmptyImage(image.width(), image.height());
     int P = pow(2, power);
-    
-    cimg_forXYC(image, x, y, c) {
-        int leftP = std::min(x, P);
-        int rightP = std::min(image.width() - x - 1, P);
 
-        float sum = 0;
+    cimg_forYC(image, y, c) {  // Iterate over rows (y) and channels (c)
+        std::vector<int> prefixSum(image.width(), 0);
+        prefixSum[0] = image(0, y, c);
 
-        for (int i = -leftP; i < 0; i++) {
-            sum -= image(x + i, y, c);
+        // Compute prefix sums for the current row
+        for (int x = 0; x < image.width() - 1; x++) {
+            prefixSum[x + 1] = prefixSum[x] + image(x, y, c);
         }
 
-        for (int j = 0; j < rightP; j++) {
-            sum += image(x + j, y, c);
-        }
+        // Compute the new pixel values using the prefix sums
+        for (int x = 0; x < image.width(); x++) {
+            int left = std::max(x - P, 0); // Start of the range
+            int centre = x;
+            int right = std::min(x + P - 1, image.width() - 1); // End of the range
 
-        newImage(x, y, c) = static_cast<uint8_t>(std::clamp(sum / (leftP + rightP + 1), 0.0f, 255.0f));
+            // Compute the sum for the range [x-P, x+P]
+            float sum = prefixSum[right] - 2 * prefixSum[centre] + prefixSum[left];
+
+            // Normalize and assign the new pixel value
+            int totalPixels = right - left;
+            newImage(x, y, c) = static_cast<uint8_t>(
+                std::clamp(sum / static_cast<float>(totalPixels), 0.0f, 255.0f)
+            );
+        }
     }
 
     return newImage;

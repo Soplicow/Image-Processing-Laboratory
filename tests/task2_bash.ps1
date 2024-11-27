@@ -13,8 +13,13 @@ if (Test-Path "../output/lena_orosenfeld.txt") {
 if (Test-Path "../output/lena_extractionOfDetails.txt") {
     Clear-Content -Path "../output/lena_extractionOfDetails.txt"
 }
+if (Test-Path "../output/pentagon_hexponent.txt") {
+    Clear-Content -Path "../output/pentagon_hexponent.txt"
+}
 
 $characteristics = "--cmean", "--cvariance", "--cstdev", "--cvarcoi", "--cvarcoii", "--casyco", "--cflatco", "--centropy"
+
+& "$path_to_exe/imageProcessing.exe" --input ../images/lena.bmp $characteristics --file ../output/lena.txt 
 
 # Run histogram
 & "$path_to_exe/imageProcessing.exe" --input ../images/lena.bmp --output ../output/lena_hexponent_30_250_05.bmp --histogram 0 ../output/lena_histogram.bmp --hexponent 30 250 0.5 --histogram 0 ../output/lena_histogram_hexponent_30_250_05.bmp
@@ -525,3 +530,37 @@ $characteristics = "--cmean", "--cvariance", "--cstdev", "--cvarcoi", "--cvarcoi
 & "$path_to_exe/imageProcessing.exe" --input ../output/lena_normal3_extractionOfDetailsE.bmp $characteristics --file ../output/lena_normal3_extractionOfDetails.txt
 
 & "$path_to_exe/imageProcessing.exe" --input ../output/lena_normal3_extractionOfDetailsSE.bmp $characteristics --file ../output/lena_normal3_extractionOfDetails.txt
+
+
+
+
+
+
+
+& "$path_to_exe/imageProcessing.exe" --input ../images/pentagon.bmp --output ../output/pentagon_hexponent_70_255_0025.bmp --histogram 0 ../output/pentagon_histogram.bmp --hexponent 70 255 0.025 --histogram 0 ../output/pentagon_histogram_hexponent_70_255_0025.bmp
+
+& "$path_to_exe/imageProcessing.exe" --input ../images/pentagon.bmp --output ../output/pentagon_hexponent_70_255_002.bmp --histogram 0 ../output/pentagon_histogram.bmp --hexponent 70 255 0.02 --histogram 0 ../output/pentagon_histogram_hexponent_70_255_002.bmp
+
+& "$path_to_exe/imageProcessing.exe" --input ../images/pentagon.bmp --output ../output/pentagon_hexponent_70_255_003.bmp --histogram 0 ../output/pentagon_histogram.bmp --hexponent 70 255 0.03 --histogram 0 ../output/pentagon_histogram_hexponent_70_255_003.bmp
+
+& "$path_to_exe/imageProcessing.exe" --input ../output/pentagon_hexponent_70_255_002.bmp $characteristics --file ../output/pentagon_hexponent.txt
+
+& "$path_to_exe/imageProcessing.exe" --input ../output/pentagon_hexponent_70_255_0025.bmp $characteristics --file ../output/pentagon_hexponent.txt
+
+& "$path_to_exe/imageProcessing.exe" --input ../output/pentagon_hexponent_70_255_003.bmp $characteristics --file ../output/pentagon_hexponent.txt
+
+
+
+& "$path_to_exe/imageProcessing.exe" --input ../images/pentagon.bmp --output ../output/pentagon_orosenfeld_2.bmp --orosenfeld 2 --histogram 0 ../output/pentagon_histogram_orosenfeld_2.bmp
+
+& "$path_to_exe/imageProcessing.exe" --input ../images/pentagon.bmp --output ../output/pentagon_orosenfeld_3.bmp --orosenfeld 3 --histogram 0 ../output/pentagon_histogram_orosenfeld_3.bmp
+
+& "$path_to_exe/imageProcessing.exe" --input ../images/pentagon.bmp --output ../output/pentagon_orosenfeld_4.bmp --orosenfeld 4 --histogram 0 ../output/pentagon_histogram_orosenfeld_4.bmp
+
+
+
+& "$path_to_exe/imageProcessing.exe" --input ../output/pentagon_orosenfeld_2.bmp $characteristics --file ../output/pentagon_orosenfeld.txt
+
+& "$path_to_exe/imageProcessing.exe" --input ../output/pentagon_orosenfeld_3.bmp $characteristics --file ../output/pentagon_orosenfeld.txt
+
+& "$path_to_exe/imageProcessing.exe" --input ../output/pentagon_orosenfeld_4.bmp $characteristics --file ../output/pentagon_orosenfeld.txt

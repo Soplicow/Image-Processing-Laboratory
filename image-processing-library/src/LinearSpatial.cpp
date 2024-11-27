@@ -62,19 +62,20 @@ void LinearSpatial::optimizedExtractionOfDetailsN(CImg<unsigned char>& image) {
             for (int c = 0; c < image.spectrum(); ++c) {
                 
                 int sum = 0;
-                sum += image(x - 1, y - 1, c) * 1;   // maskN[0]
-                sum += image(x - 1, y, c) * 1;       // maskN[1]
-                sum += image(x - 1, y + 1, c) * 1;   // maskN[2]
+                sum += image(x - 1, y - 1, c);   // maskN[0]
+                sum += image(x - 1, y, c);       // maskN[1]
+                sum += image(x - 1, y + 1, c);   // maskN[2]
 
-                sum += image(x, y - 1, c) * 1;       // maskN[3]
+                sum += image(x, y - 1, c);       // maskN[3]
                 sum += image(x, y, c) * -2;          // maskN[4]
-                sum += image(x, y + 1, c) * 1;       // maskN[5]
+                sum += image(x, y + 1, c);       // maskN[5]
 
-                sum += image(x + 1, y - 1, c) * -1;  // maskN[6]
-                sum += image(x + 1, y, c) * -1;      // maskN[7]
-                sum += image(x + 1, y + 1, c) * -1;  // maskN[8]
+                sum -= image(x + 1, y - 1, c);  // maskN[6]
+                sum -= image(x + 1, y, c);      // maskN[7]
+                sum -= image(x + 1, y + 1, c);  // maskN[8]
                 
-                newImage(x, y, c) = std::clamp(sum, 0, 255);
+                newImage(x, y, c) = std::min(255, abs(sum));
+
             }
         }
     }

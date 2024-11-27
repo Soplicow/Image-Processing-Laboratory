@@ -13,7 +13,7 @@ float Characteristics::mean(CImg<unsigned char> image) {
     cimg_forXYC(image, x, y, c) {
         sum += image(x, y, 0, c);
     }
-    return sum / (image.size() * image.spectrum());
+    return sum / image.size();
 }
 
 float Characteristics::variance(CImg<unsigned char> image) {
@@ -23,7 +23,7 @@ float Characteristics::variance(CImg<unsigned char> image) {
         float pixelValue = image(x, y, 0, c);
         sum += pow(pixelValue - meanValue, 2);
     }
-    return sum / (image.size() * image.spectrum());
+    return sum / image.size();
 }
 
 float Characteristics::standardDeviation(CImg<unsigned char> image) {
@@ -47,7 +47,7 @@ float Characteristics::variationCoefficient_2(CImg<unsigned char> image) {
         sumOfSquares += pow(pair.second, 2);
     }
 
-    return sumOfSquares / (pow(image.size(), 2) * image.spectrum());
+    return sumOfSquares / (pow(image.width() * image.height(), 2) * image.spectrum());
 }
 
 float Characteristics::assymetryCoefficient(CImg<unsigned char> image) {
@@ -58,7 +58,7 @@ float Characteristics::assymetryCoefficient(CImg<unsigned char> image) {
         float pixelValue = image(x, y, 0, c);
         sum += pow(pixelValue - meanValue, 3);
     }
-    return sum / (image.size() * image.spectrum() * pow(varianceValue, 3));
+    return sum / (image.size() * pow(varianceValue, 3));
 }
 
 float Characteristics::flatteningCoefficient(CImg<unsigned char> image) {
@@ -69,7 +69,7 @@ float Characteristics::flatteningCoefficient(CImg<unsigned char> image) {
         float pixelValue = image(x, y, 0, c);
         sum += pow(pixelValue - meanValue, 4);
     }
-    return sum / (image.size() * image.spectrum() * pow(varianceValue, 4));
+    return sum / (image.size() * pow(varianceValue, 4));
 }
 
 float Characteristics::entropy(CImg<unsigned char> image) {
@@ -81,7 +81,7 @@ float Characteristics::entropy(CImg<unsigned char> image) {
 
     float entropyValue = 0;
     for (const auto& pair : histogram) {
-        float probability = static_cast<float>(pair.second) / (image.size() * image.spectrum());
+        float probability = static_cast<float>(pair.second) / image.size();
         entropyValue += pair.second * log2(probability);
     }
 
