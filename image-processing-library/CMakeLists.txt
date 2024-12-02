@@ -9,6 +9,7 @@ set(SOURCE_FILES
     src/LinearSpatial.cpp
     src/NonLinearSpatial.cpp
     src/Characteristics.cpp
+    src/BinaryOp.cpp
 )
 
 add_library(image-processing-library STATIC ${SOURCE_FILES})

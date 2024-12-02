@@ -1,7 +1,7 @@
 #ifndef ELEMENTARY_H
 #define ELEMENTARY_H
 
-#include "../include/CImg.h"
+#include <CImg.h>
 
 using namespace cimg_library;
 

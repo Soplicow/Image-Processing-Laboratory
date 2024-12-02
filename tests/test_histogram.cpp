@@ -2,7 +2,7 @@
 #include <catch2/catch_test_macros.hpp>
 #include "Histogram.h"
 
-TEST_CASE("Histogram calculation", "[histogram]") {
+TEST_CASE("Histogram::Histogram calculation", "[histogram]") {
     CImg<unsigned char> testImage("test_image.bmp");
     std::map<uint8_t, uint32_t> histogram = Histogram::computeHistogram(testImage, 0);
     REQUIRE(histogram.size() == 256);
@@ -11,7 +11,7 @@ TEST_CASE("Histogram calculation", "[histogram]") {
     REQUIRE(histogram[0] == 64*64*2);
 }
 
-TEST_CASE("One pixel image", "[histogram]") {
+TEST_CASE("Histogram::One pixel image", "[histogram]") {
     CImg<unsigned char> testImage(1, 1, 1, 1, 0);
     std::map<uint8_t, uint32_t> histogram = Histogram::computeHistogram(testImage, 0);
     REQUIRE(histogram.size() == 256);
@@ -20,7 +20,7 @@ TEST_CASE("One pixel image", "[histogram]") {
     }
 }
 
-TEST_CASE("Histogram image", "[histogram]") {
+TEST_CASE("Histogram::Histogram image", "[histogram]") {
     CImg<unsigned char> testImage("test_image.bmp");
     CImg<unsigned char> histogramImage = Histogram::returnHistogramImage(testImage, 0);
     REQUIRE(histogramImage.width() == 256);
@@ -28,7 +28,7 @@ TEST_CASE("Histogram image", "[histogram]") {
     REQUIRE(histogramImage.spectrum() == 3);
 }
 
-TEST_CASE("Exponential FPDF", "[histogram]") {
+TEST_CASE("Histogram::Exponential FPDF", "[histogram]") {
     CImg<unsigned char> testImage("test_image.bmp");
     CImg<unsigned char> fpdfImage = Histogram::exponentialFPDF(testImage, 60, 200, 0.5);
     REQUIRE(fpdfImage.width() == testImage.width());
