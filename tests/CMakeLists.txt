@@ -37,9 +37,9 @@ add_executable(imageProcessingTests_task3
 catch_discover_tests(imageProcessingTests_task3)
 
 add_custom_command(TARGET imageProcessingTests_task1 POST_BUILD
-    COMMAND ${CMAKE_COMMAND} -E copy
-            ${CMAKE_SOURCE_DIR}/tests/test_image.bmp
-            $<TARGET_FILE_DIR:imageProcessingTests_task1>/test_image.bmp
+        COMMAND ${CMAKE_COMMAND} -E copy
+                ${CMAKE_SOURCE_DIR}/tests/test_image.bmp
+                $<TARGET_FILE_DIR:imageProcessingTests_task1>/test_image.bmp
 )
 
 add_custom_command(TARGET imageProcessingTests_task3 POST_BUILD
@@ -54,7 +54,15 @@ add_custom_command(TARGET imageProcessingTests_task3 POST_BUILD
     COMMAND ${CMAKE_COMMAND} -E copy
             ${CMAKE_SOURCE_DIR}/tests/mandrilbw.bmp
             $<TARGET_FILE_DIR:imageProcessingTests_task3>/mandrilbw.bmp
-            
+        
+    COMMAND ${CMAKE_COMMAND} -E copy
+        ${CMAKE_SOURCE_DIR}/tests/mandril.bmp
+        $<TARGET_FILE_DIR:imageProcessingTests_task3>/mandril.bmp
+
+        COMMAND ${CMAKE_COMMAND} -E copy
+                ${CMAKE_SOURCE_DIR}/tests/mandrilc.bmp
+                $<TARGET_FILE_DIR:imageProcessingTests_task3>/mandrilc.bmp
+
     COMMAND ${CMAKE_COMMAND} -E make_directory
             $<TARGET_FILE_DIR:imageProcessingTests_task3>/task3
 )

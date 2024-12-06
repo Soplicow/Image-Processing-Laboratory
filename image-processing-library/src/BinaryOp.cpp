@@ -9,13 +9,19 @@ CImg<unsigned char> BinaryOp::dilation(const CImg<unsigned char>& image, const s
     CImg<unsigned char> dilatedImage = GlobalHelper::createEmptyBinaryImage(image.width(), image.height());
     
     int buffer = kernel.size() / 2;
+    int kernelSize = kernel.size();
+    int kernelInnerSize = kernel[0].size();
 
     forXYnoBorders(image, x, y, buffer) {
         if (image(x, y) == 255) {
-            for (int i = 0; i < kernel.size(); i++) {
-                for (int j = 0; j < kernel[i].size(); j++) {
-                    if (kernel[j][i] == 1) {
-                        dilatedImage(x + i - buffer, y + j - buffer) = 255;
+            for (int i = 0; i < kernelSize; i++) {
+                for (int j = 0; j < kernelInnerSize; j++) {
+                    if (kernel[j][i]) {
+                        int newX = x + i - buffer;
+                        int newY = y + j - buffer;
+                        if (newX >= 0 && newX < image.width() && newY >= 0 && newY < image.height()) {
+                            dilatedImage(newX, newY) = 255;
+                        }
                     }
                 }
             }   
@@ -29,12 +35,14 @@ CImg<unsigned char> BinaryOp::erosion(const CImg<unsigned char>& image, const st
     CImg<unsigned char> erodedImage = GlobalHelper::createEmptyBinaryImage(image.width(), image.height());
     
     int buffer = kernel.size() / 2;
+    int kernelSize = kernel.size();
+    int kernelInnerSize = kernel[0].size();
 
     forXYnoBorders(image, x, y, buffer) {
         bool isErosion = true;
-        for (int i = 0; i < kernel.size(); i++) {
-            for (int j = 0; j < kernel[i].size(); j++) {
-                if (kernel[j][i] == 1 && image(x + i - buffer, y + j - buffer) != 255) {
+        for (int i = 0; i < kernelSize && isErosion; i++) {
+            for (int j = 0; j < kernelInnerSize; j++) {
+                if (kernel[j][i] && image(x + i - buffer, y + j - buffer) != 255) {
                     isErosion = false;
                     break;
                 }
@@ -54,6 +62,7 @@ CImg<unsigned char> BinaryOp::closing(const CImg<unsigned char>& image, const st
     return erosion(dilation(image, kernel), kernel);
 }
 
+// UNUSED
 CImg<unsigned char> BinaryOp::binarizeImage(const CImg<unsigned char>& image, unsigned char threshold) {
     CImg<unsigned char> binarizedImage = GlobalHelper::createEmptyImage(image.width(), image.height());
 
@@ -64,6 +73,7 @@ CImg<unsigned char> BinaryOp::binarizeImage(const CImg<unsigned char>& image, un
     return binarizedImage;
 }
 
+// UNUSED
 bool BinaryOp::saveBinaryImage(const CImg<unsigned char>& image, const char* filename) {
     try {
         std::ofstream pbm(filename, std::ios::binary);
@@ -116,19 +126,23 @@ CImg<unsigned char> BinaryOp::imageIntersection(const CImg<unsigned char>& image
     return result;
 }
 
-CImg<unsigned char> BinaryOp::M7(const CImg<unsigned char>& image, const std::array<std::array<bool, 3>, 3>& kernel, int k) {
+CImg<unsigned char> BinaryOp::M7(const CImg<unsigned char>& image, const std::array<std::array<bool, 3>, 3>& kernel) {
     std::vector<CImg<unsigned char>> stages;
     CImg<unsigned char> result = GlobalHelper::createEmptyBinaryImage(image.width(), image.height());
 
-    for (int i = 0; i <= k; ++i) {
-        if (i == 0) {
-            stages.push_back(image);
+    int iterations = 0;
+    stages.push_back(image);
+    while(iterations < 9999) {
+        CImg<unsigned char> stage = erosion(stages[iterations - 1], kernel);
+        if (stage != result) {
+            stages.push_back(stage);
+            iterations++;
         } else {
-            stages.push_back(erosion(stages[i - 1], kernel));
+            break;
         }
     }
 
-    for (int i = 0; i <= k; ++i) {
+    for (int i = 0; i < stages.size(); ++i) {
         result = imageSum(result, imageSubtract(stages[i], opening(stages[i], kernel)));
     }
     
@@ -183,9 +197,16 @@ CImg<unsigned char> BinaryOp::regionGrowing(const CImg<unsigned char>& image, in
             
             // Ensure the neighbor is within image bounds and not yet visited
             if (nx >= 0 && nx < image.width() && ny >= 0 && ny < image.height() && result(nx, ny) == 0) {
+                unsigned char neighborValueR = image(nx, ny, 0, 0);
+                unsigned char neighborValueG = image(nx, ny, 0, 1);
+                unsigned char neighborValueB = image(nx, ny, 0, 2);
+
+                float distance = std::sqrt(std::pow(neighborValueR - seedValue, 2) + 
+                                            std::pow(neighborValueG - seedValue, 2) + 
+                                            std::pow(neighborValueB - seedValue, 2));
                 
                 // Threshold-based inclusion for grayscale images
-                if (std::abs(image(nx, ny) - seedValue) <= threshold) {
+                if (distance <= threshold) {
                     result(nx, ny) = 255; // Add to the region
                     pixelQueue.push({nx, ny}); // Push to queue for further exploration
                 }
@@ -194,6 +215,105 @@ CImg<unsigned char> BinaryOp::regionGrowing(const CImg<unsigned char>& image, in
     }
     
     return result;
+}
+
+CImg<unsigned char> BinaryOp::task3Operations(const CImg<unsigned char>& image, int kernelNumber, std::string kernelDirection, std::string operation) {
+    std::array<std::array<bool, 3>, 3> kernel;
+    std::array<std::array<bool, 3>, 3> kernelComplement;
+    
+    switch (kernelNumber)
+    {
+    case (1):
+        kernel = kernel_1;
+        break;
+    case (2):
+        kernel = kernel_2;
+        break;
+    case (3):
+        kernel = kernel_3;
+        break;
+    case (4):
+        kernel = kernel_4;
+        break;
+    case (5):
+        kernel = kernel_5;
+        break;
+    case (6):
+        kernel = kernel_6;
+        break;
+    case (7):
+        kernel = kernel_7;
+        break;
+    case (8):
+        kernel = kernel_8;
+        break;
+    case (9):
+        kernel = kernel_9;
+        break;
+    case (10):
+        kernel = kernel_10;
+        break;
+    case (11):
+        kernelComplement = kernel_11_complement;
+        if (kernelDirection == "left") {
+            kernel = kernel_11_left;
+        } else if (kernelDirection == "right") {
+            kernel = kernel_11_right;
+        } else if (kernelDirection == "up") {
+            kernel = kernel_11_up;
+        } else if (kernelDirection == "down") {
+            kernel = kernel_11_down;
+        } else {
+            throw std::invalid_argument("Invalid kernel direction");
+        }
+    case (12):
+        if (kernelDirection == "left") {
+            kernel = kernel_12_left;
+            kernelComplement = kernel_12_left_complement;
+        } else if (kernelDirection == "right") {
+            kernel = kernel_12_right;
+            kernelComplement = kernel_12_right_complement;
+        } else if (kernelDirection == "top") {
+            kernel = kernel_12_top;
+            kernelComplement = kernel_12_top_complement;
+        } else if (kernelDirection == "bottom") {
+            kernel = kernel_12_bottom;
+            kernelComplement = kernel_12_bottom_complement;
+        } else if (kernelDirection == "top-left") {
+            kernel = kernel_12_top_left;
+            kernelComplement = kernel_12_top_left_complement;
+        } else if (kernelDirection == "top-right") {
+            kernel = kernel_12_top_right;
+            kernelComplement = kernel_12_top_right_complement;
+        } else if (kernelDirection == "bottom-left") {
+            kernel = kernel_12_bottom_left;
+            kernelComplement = kernel_12_bottom_left_complement;
+        } else if (kernelDirection == "bottom-right") {
+            kernel = kernel_12_bottom_right;
+            kernelComplement = kernel_12_bottom_right_complement;
+        } else {
+            throw std::invalid_argument("Invalid kernel direction");
+        }
+    default:
+        throw std::invalid_argument("Invalid kernel number");
+        break;
+    }
+
+    if (operation == "erosion") {
+        return BinaryOp::erosion(image, kernel);
+    } else if (operation == "dilation") {
+        return BinaryOp::dilation(image, kernel);
+    } else if (operation == "opening") {
+        return BinaryOp::opening(image, kernel);
+    } else if (operation == "closing") {
+        return BinaryOp::closing(image, kernel);
+    } else if (operation == "HMT") {
+        return BinaryOp::HMT(image, kernel, kernelComplement);
+    } else if (operation == "M7") {
+        return BinaryOp::M7(image, kernel);
+    } else {
+        throw std::invalid_argument("Invalid operation");
+    }
 }
 
 

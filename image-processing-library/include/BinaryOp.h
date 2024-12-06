@@ -34,11 +34,13 @@ public:
 
     static CImg<unsigned char> imageIntersection(const CImg<unsigned char>& imageA, const CImg<unsigned char>& imageB);
 
-    static CImg<unsigned char> M7(const CImg<unsigned char>& image, const std::array<std::array<bool, 3>, 3>& kernel, int k);
+    static CImg<unsigned char> M7(const CImg<unsigned char>& image, const std::array<std::array<bool, 3>, 3>& kernel);
 
     static CImg<unsigned char> complement(const CImg<unsigned char>& image);
 
     static CImg<unsigned char> regionGrowing(const CImg<unsigned char>& image, int seedX, int seedY, int threshold);
+
+    static CImg<unsigned char> task3Operations(const CImg<unsigned char>& image, int kernelNumber, std::string kernelDirection, std::string operation);
 
 private:
     static const std::array<std::array<bool, 3>, 3> kernel_1;

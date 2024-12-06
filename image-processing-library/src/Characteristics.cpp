@@ -82,7 +82,7 @@ float Characteristics::entropy(CImg<unsigned char> image) {
     float entropyValue = 0;
     for (const auto& pair : histogram) {
         float probability = static_cast<float>(pair.second) / image.size();
-        entropyValue += pair.second * log2(probability);
+        entropyValue += probability * log2(probability);
     }
 
     return -entropyValue;

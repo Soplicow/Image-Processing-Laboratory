@@ -67,7 +67,7 @@ void LinearSpatial::optimizedExtractionOfDetailsN(CImg<unsigned char>& image) {
                 sum += image(x - 1, y + 1, c);   // maskN[2]
 
                 sum += image(x, y - 1, c);       // maskN[3]
-                sum += image(x, y, c) * -2;          // maskN[4]
+                sum -= image(x, y, c) * -2;      // maskN[4]
                 sum += image(x, y + 1, c);       // maskN[5]
 
                 sum -= image(x + 1, y - 1, c);  // maskN[6]

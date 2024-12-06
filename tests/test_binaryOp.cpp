@@ -57,8 +57,11 @@ TEST_CASE("BinaryOp::erosion - Lenabw", "[erosion]") {
 TEST_CASE("BinaryOp::M7 - lenabw", "[M7]") {
     CImg<unsigned char> image("lenabw.bmp");
     std::array<std::array<bool, 3>, 3> kernel = {{{0, 1, 0}, {1, 1, 1}, {0, 1, 0}}};
-    CImg<unsigned char> result = BinaryOp::M7(image, kernel, 1);
+    CImg<unsigned char> result = BinaryOp::M7(image, kernel);
     result.save_bmp("task3/lenabw_M7.bmp");
+
+    CImg<unsigned char> result1 = BinaryOp::M7(image, kernel);
+    result1.save_bmp("task3/lenabw_M7_200.bmp");
 
     REQUIRE(image != result); // The result should not be the same as the input
 }
@@ -71,8 +74,12 @@ TEST_CASE("BinaryOp::M7 - customimage", "[M7]") {
         image(11, y) = 255; // Set the middle column to 255 (white)
     }
     std::array<std::array<bool, 3>, 3> kernel = {{{0, 1, 0}, {1, 1, 1}, {0, 1, 0}}};
-    CImg<unsigned char> result = BinaryOp::M7(image, kernel, 1);
+
+    CImg<unsigned char> result = BinaryOp::M7(image, kernel);
     result.save_bmp("task3/binary_M7.bmp");
+
+    CImg<unsigned char> result1 = BinaryOp::M7(image, kernel);
+    result1.save_bmp("task3/binary_M7_200.bmp");
 
     REQUIRE(image != result); // The result should not be the same as the input
 }
@@ -80,16 +87,19 @@ TEST_CASE("BinaryOp::M7 - customimage", "[M7]") {
 TEST_CASE("BinaryOp::M7 - mandrilbw", "[M7]") {
     CImg<unsigned char> image("mandrilbw.bmp");
     std::array<std::array<bool, 3>, 3> kernel = {{{0, 1, 0}, {1, 1, 1}, {0, 1, 0}}};
-    CImg<unsigned char> result = BinaryOp::M7(image, kernel, 1);
-    CImg<unsigned char> result1 = BinaryOp::M7(image, kernel, 4);
-    CImg<unsigned char> result2 = BinaryOp::M7(image, kernel, 7);
+    CImg<unsigned char> result = BinaryOp::M7(image, kernel);
+    CImg<unsigned char> result1 = BinaryOp::M7(image, kernel);
+    CImg<unsigned char> result2 = BinaryOp::M7(image, kernel);
+    CImg<unsigned char> result3 = BinaryOp::M7(image, kernel);
     result.save_bmp("task3/mandrilbw_M7_1.bmp");
     result1.save_bmp("task3/mandrilbw_M7_4.bmp");
     result2.save_bmp("task3/mandrilbw_M7_7.bmp");
+    result3.save_bmp("task3/mandrilbw_M7_200.bmp");
 
     REQUIRE(image != result); // The result should not be the same as the input
     REQUIRE(image != result1); // The result should not be the same as the input
     REQUIRE(image != result2); // The result should not be the same as the input
+    REQUIRE(image != result3); // The result should not be the same as the input
 }
 
 TEST_CASE("BinaryOp::regionGrowing - lenabw", "[regionGrowing]") {
@@ -102,6 +112,36 @@ TEST_CASE("BinaryOp::regionGrowing - lenabw", "[regionGrowing]") {
 
     REQUIRE(image != result1); // The result should not be the same as the input
     REQUIRE(image != result2); // The result should not be the same as the input
+}
+
+TEST_CASE("BinaryOp::regionGrowing - mandril", "[regionGrowing]") {
+    CImg<unsigned char> image("mandril.bmp");
+    CImg<unsigned char> result1 = BinaryOp::regionGrowing(image, 180, 220, 50);
+    CImg<unsigned char> result2 = BinaryOp::regionGrowing(image, 30, 400, 10);
+    CImg<unsigned char> result3 = BinaryOp::regionGrowing(image, 100, 300, 40);
+
+    result1.save_bmp("task3/mandril_region1.bmp");
+    result2.save_bmp("task3/mandril_region2.bmp");
+    result3.save_bmp("task3/mandril_region3.bmp");
+
+    REQUIRE(image != result1); // The result should not be the same as the input
+    REQUIRE(image != result2); // The result should not be the same as the input
+    REQUIRE(image != result3); // The result should not be the same as the input
+}
+
+TEST_CASE("BinaryOp::regionGrowing - mandrilc", "[regionGrowing]") {
+    CImg<unsigned char> image("mandrilc.bmp");
+    CImg<unsigned char> result1 = BinaryOp::regionGrowing(image, 256, 412, 255);
+    CImg<unsigned char> result2 = BinaryOp::regionGrowing(image, 30, 400, 50);
+    CImg<unsigned char> result3 = BinaryOp::regionGrowing(image, 100, 300, 40);
+
+    result1.save_bmp("task3/mandrilc_region1.bmp");
+    result2.save_bmp("task3/mandrilc_region2.bmp");
+    result3.save_bmp("task3/mandrilc_region3.bmp");
+
+    REQUIRE(image != result1); // The result should not be the same as the input
+    REQUIRE(image != result2); // The result should not be the same as the input
+    REQUIRE(image != result3); // The result should not be the same as the input
 }
 
 TEST_CASE("BinaryOp::HMT - lenabw", "[HMT]") {
