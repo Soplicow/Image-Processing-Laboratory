@@ -540,11 +540,12 @@ int main(int argc, char* argv[]) {
 
                         try {
                                 int kernelA = std::stoi(*(pargv + 1));
-                                char* kernelB = *(pargv + 2);
+                                std::string kernelB = std::string(*(pargv + 2));
+                                
                                 modifiedImage = BinaryOp::task3Operations(modifiedImage, kernelA, kernelB, "HMT");
                                 pargv += 2;
                         } catch (std::invalid_argument& e) {
-                                std::cerr << "Invalid argument: " << *(pargv + 1) << " or " << *(pargv + 2) << "\n";
+                                std::cerr << "Invalid argument: " << *(pargv + 1) << " or " << *(pargv + 2) << e.what() << "\n";
                                 return 0;
                         }
                         continue;
@@ -568,17 +569,18 @@ int main(int argc, char* argv[]) {
 
                 if (std::string(*pargv).find("--regionGrowing") != std::string::npos) {
                         if (*(pargv + 1) == argv[argc] || *(pargv + 2) == argv[argc]) {
-                                std::cerr << "Usage: " << "--regionGrowing " << "[-x=0]" << "[-y=0]" << "[-threshold=30]" << "\n";
+                                std::cerr << "Usage: " << "--regionGrowing " << "[-x=0]" << "[-y=0]" << "[-threshold=30]" << "[-criterion=2]" << "\n";
                         }
 
                         try {
                                 int x = std::stoi(*(pargv + 1));
                                 int y = std::stoi(*(pargv + 2));
                                 int threshold = std::stoi(*(pargv + 3));
-                                modifiedImage = BinaryOp::regionGrowing(modifiedImage, x, y, threshold);
+                                int criterion = std::stoi(*(pargv + 4));
+                                modifiedImage = BinaryOp::regionGrowing(modifiedImage, x, y, threshold, criterion);
                                 pargv += 3;
                         } catch (std::invalid_argument& e) {
-                                std::cerr << "Invalid argument: " << *(pargv + 1) << " or " << *(pargv + 2) << "or" << *(pargv + 3) << "\n";
+                                std::cerr << "Invalid argument: " << e.what() << "\n";
                                 return 0;
                         }
                         continue;

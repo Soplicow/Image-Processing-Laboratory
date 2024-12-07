@@ -39,7 +39,7 @@ public:
 
     static CImg<unsigned char> complement(const CImg<unsigned char>& image);
 
-    static CImg<unsigned char> regionGrowing(const CImg<unsigned char>& image, int seedX, int seedY, int threshold);
+    static CImg<unsigned char> regionGrowing(const CImg<unsigned char>& image, int seedX, int seedY, int threshold, int criterion);
 
     static CImg<unsigned char> task3Operations(const CImg<unsigned char>& image, int kernelNumber, std::string kernelDirection, std::string operation);
 

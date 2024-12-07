@@ -150,3 +150,16 @@ TEST_CASE("BinaryOp::HMT - lenabw", "[HMT]") {
     REQUIRE(image != result); // The result should not be the same as the input
     REQUIRE(image != result2); // The result should not be the same as the input
 }
+
+TEST_CASE("BinaryOp::HMT - customimage", "[HMT]") {
+    CImg<unsigned char> image(21, 21, 1, 1, 0); // Initialize a 21x21 image with all pixels set to 0 (black)
+    for (int y = 0; y < 21; ++y) {
+        image(10, y) = 255; // Set the middle column to 255 (white)
+    }
+    std::array<std::array<bool, 3>, 3> kernelA = {{{1, 0, 0}, {1, 1, 0}, {1, 0, 0}}};
+    std::array<std::array<bool, 3>, 3> kernelB = {{{0, 0, 1}, {0, 0, 1}, {0, 0, 1}}};
+    CImg<unsigned char> result = BinaryOp::HMT(image, kernelA, kernelB);
+    result.save_bmp("task3/custom_HMT.bmp");
+
+    REQUIRE(image != result); // The result should not be the same as the input
+}
