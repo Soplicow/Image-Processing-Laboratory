@@ -1,4 +1,4 @@
-# task2_bash.ps1
+# task2_script.ps1
 
 Write-Output "Running ImageProcessing Task2"
 $path_to_exe = "../build"

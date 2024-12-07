@@ -477,6 +477,7 @@ int main(int argc, char* argv[]) {
                         try {
                                 int kernel = std::stoi(*(pargv + 1));
                                 modifiedImage = BinaryOp::task3Operations(modifiedImage, kernel, "", "erosion");
+                                pargv++;
                         } catch (std::invalid_argument& e) {
                                 std::cerr << "Invalid argument: " << *(pargv + 1) << "\n";
                                 return 0;
@@ -492,6 +493,7 @@ int main(int argc, char* argv[]) {
                         try {
                                 int kernel = std::stoi(*(pargv + 1));
                                 modifiedImage = BinaryOp::task3Operations(modifiedImage, kernel, "", "dilation");
+                                pargv++;
                         } catch (std::invalid_argument& e) {
                                 std::cerr << "Invalid argument: " << *(pargv + 1) << "\n";
                                 return 0;
@@ -507,6 +509,7 @@ int main(int argc, char* argv[]) {
                         try {
                                 int kernel = std::stoi(*(pargv + 1));
                                 modifiedImage = BinaryOp::task3Operations(modifiedImage, kernel, "", "opening");
+                                pargv++;
                         } catch (std::invalid_argument& e) {
                                 std::cerr << "Invalid argument: " << *(pargv + 1) << "\n";
                                 return 0;
@@ -522,6 +525,7 @@ int main(int argc, char* argv[]) {
                         try {
                                 int kernel = std::stoi(*(pargv + 1));
                                 modifiedImage = BinaryOp::task3Operations(modifiedImage, kernel, "", "closing");
+                                pargv++;
                         } catch (std::invalid_argument& e) {
                                 std::cerr << "Invalid argument: " << *(pargv + 1) << "\n";
                                 return 0;
@@ -538,6 +542,7 @@ int main(int argc, char* argv[]) {
                                 int kernelA = std::stoi(*(pargv + 1));
                                 char* kernelB = *(pargv + 2);
                                 modifiedImage = BinaryOp::task3Operations(modifiedImage, kernelA, kernelB, "HMT");
+                                pargv += 2;
                         } catch (std::invalid_argument& e) {
                                 std::cerr << "Invalid argument: " << *(pargv + 1) << " or " << *(pargv + 2) << "\n";
                                 return 0;
@@ -553,8 +558,27 @@ int main(int argc, char* argv[]) {
                         try {
                                 int kernel = std::stoi(*(pargv + 1));
                                 modifiedImage = BinaryOp::task3Operations(modifiedImage, kernel, "", "M7");
+                                pargv++;
                         } catch (std::invalid_argument& e) {
                                 std::cerr << "Invalid argument: " << *(pargv + 1) << "\n";
+                                return 0;
+                        }
+                        continue;
+                }
+
+                if (std::string(*pargv).find("--regionGrowing") != std::string::npos) {
+                        if (*(pargv + 1) == argv[argc] || *(pargv + 2) == argv[argc]) {
+                                std::cerr << "Usage: " << "--regionGrowing " << "[-x=0]" << "[-y=0]" << "[-threshold=30]" << "\n";
+                        }
+
+                        try {
+                                int x = std::stoi(*(pargv + 1));
+                                int y = std::stoi(*(pargv + 2));
+                                int threshold = std::stoi(*(pargv + 3));
+                                modifiedImage = BinaryOp::regionGrowing(modifiedImage, x, y, threshold);
+                                pargv += 3;
+                        } catch (std::invalid_argument& e) {
+                                std::cerr << "Invalid argument: " << *(pargv + 1) << " or " << *(pargv + 2) << "or" << *(pargv + 3) << "\n";
                                 return 0;
                         }
                         continue;
@@ -598,6 +622,7 @@ int main(int argc, char* argv[]) {
                                 << "--closing [-structural_element=4]\n"
                                 << "--HMT [-structural_element_A=4] [-structural_element_complement=bottom-left]\n"
                                 << "--M7 [-structural_element=4]\n"
+                                << "--regionGrowing [-x=0] [-y=0] [-threshold=30]\n"
                                 << "--help\n";
                         return 0;
                 }

@@ -20,6 +20,19 @@ public:
         return CImg<unsigned char>(width, height, 1, 1, 0); // depth 1, 1 channel (binary), initialized to 0
     }
 
+    static boolean isEqual(const CImg<unsigned char>& imageA, const CImg<unsigned char>& imageB) {
+        if (imageA.width() != imageB.width() || imageA.height() != imageB.height()) {
+            return false;
+        }
+
+        cimg_forXY(imageA, x, y) {
+            if (imageA(x, y) != imageB(x, y)) {
+                return false;
+            }
+        }
+
+        return true;
+    }
 };
 
 #endif // GLOBALHELPER_H

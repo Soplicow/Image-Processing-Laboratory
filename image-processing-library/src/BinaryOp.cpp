@@ -3,7 +3,7 @@
 #include <fstream>
 #include <vector>
 #include <queue>
-
+#include <cmath>
 
 CImg<unsigned char> BinaryOp::dilation(const CImg<unsigned char>& image, const std::array<std::array<bool, 3>, 3>& kernel) {
     CImg<unsigned char> dilatedImage = GlobalHelper::createEmptyBinaryImage(image.width(), image.height());
@@ -128,13 +128,13 @@ CImg<unsigned char> BinaryOp::imageIntersection(const CImg<unsigned char>& image
 
 CImg<unsigned char> BinaryOp::M7(const CImg<unsigned char>& image, const std::array<std::array<bool, 3>, 3>& kernel) {
     std::vector<CImg<unsigned char>> stages;
-    CImg<unsigned char> result = GlobalHelper::createEmptyBinaryImage(image.width(), image.height());
+    CImg<unsigned char> result = CImg<unsigned char>(image.width(), image.height(), 1, 1, 0);
 
-    int iterations = 0;
+    int iterations = 1;
     stages.push_back(image);
     while(iterations < 9999) {
         CImg<unsigned char> stage = erosion(stages[iterations - 1], kernel);
-        if (stage != result) {
+        if (!GlobalHelper::isEqual(stage, result)) {
             stages.push_back(stage);
             iterations++;
         } else {
@@ -316,45 +316,44 @@ CImg<unsigned char> BinaryOp::task3Operations(const CImg<unsigned char>& image, 
     }
 }
 
-
 // Kernels
-const std::array<std::array<bool, 3>, 3> kernel_1 = {{{0, 0, 0}, {0, 1, 1}, {0, 0, 0}}};
-const std::array<std::array<bool, 3>, 3> kernel_2 = {{{0, 0, 0}, {0, 1, 0}, {0, 1, 0}}};
-const std::array<std::array<bool, 3>, 3> kernel_3 = {{{1, 1, 1}, {1, 1, 1}, {1, 1, 1}}};
-const std::array<std::array<bool, 3>, 3> kernel_4 = {{{0, 1, 0}, {1, 1, 1}, {0, 1, 0}}};
-const std::array<std::array<bool, 3>, 3> kernel_5 = {{{0, 0, 0}, {0, 1, 1}, {0, 1, 0}}};
-const std::array<std::array<bool, 3>, 3> kernel_6 = {{{0, 0, 0}, {0, 0, 1}, {0, 1, 0}}};
-const std::array<std::array<bool, 3>, 3> kernel_7 = {{{0, 0, 0}, {1, 1, 1}, {0, 0, 0}}};
-const std::array<std::array<bool, 3>, 3> kernel_8 = {{{0, 0, 0}, {1, 0, 1}, {0, 0, 0}}};
-const std::array<std::array<bool, 3>, 3> kernel_9 = {{{0, 0, 0}, {1, 1, 0}, {1, 0, 0}}};
-const std::array<std::array<bool, 3>, 3> kernel_10 = {{{0, 1, 1}, {0, 1, 0}, {0, 0, 0}}};
+const std::array<std::array<bool, 3>, 3> BinaryOp::kernel_1 = {{{0, 0, 0}, {0, 1, 1}, {0, 0, 0}}};
+const std::array<std::array<bool, 3>, 3> BinaryOp::kernel_2 = {{{0, 0, 0}, {0, 1, 0}, {0, 1, 0}}};
+const std::array<std::array<bool, 3>, 3> BinaryOp::kernel_3 = {{{1, 1, 1}, {1, 1, 1}, {1, 1, 1}}};
+const std::array<std::array<bool, 3>, 3> BinaryOp::kernel_4 = {{{0, 1, 0}, {1, 1, 1}, {0, 1, 0}}};
+const std::array<std::array<bool, 3>, 3> BinaryOp::kernel_5 = {{{0, 0, 0}, {0, 1, 1}, {0, 1, 0}}};
+const std::array<std::array<bool, 3>, 3> BinaryOp::kernel_6 = {{{0, 0, 0}, {0, 0, 1}, {0, 1, 0}}};
+const std::array<std::array<bool, 3>, 3> BinaryOp::kernel_7 = {{{0, 0, 0}, {1, 1, 1}, {0, 0, 0}}};
+const std::array<std::array<bool, 3>, 3> BinaryOp::kernel_8 = {{{0, 0, 0}, {1, 0, 1}, {0, 0, 0}}};
+const std::array<std::array<bool, 3>, 3> BinaryOp::kernel_9 = {{{0, 0, 0}, {1, 1, 0}, {1, 0, 0}}};
+const std::array<std::array<bool, 3>, 3> BinaryOp::kernel_10 = {{{0, 1, 1}, {0, 1, 0}, {0, 0, 0}}};
 
-const std::array<std::array<bool, 3>, 3> kernel_11_left = {{{1, 0, 0}, {1, 0, 0}, {1, 0, 0}}};
-const std::array<std::array<bool, 3>, 3> kernel_11_right = {{{0, 0, 1}, {0, 0, 1}, {0, 0, 1}}};
-const std::array<std::array<bool, 3>, 3> kernel_11_up = {{{1, 1, 1}, {0, 0, 0}, {0, 0, 0}}};
-const std::array<std::array<bool, 3>, 3> kernel_11_down = {{{0, 0, 0}, {0, 0, 0}, {1, 1, 1}}};
-const std::array<std::array<bool, 3>, 3> kernel_11_complement = {{{0, 0, 0}, {0, 1, 0}, {0, 0, 0}}}; 
+const std::array<std::array<bool, 3>, 3> BinaryOp::kernel_11_left = {{{1, 0, 0}, {1, 0, 0}, {1, 0, 0}}};
+const std::array<std::array<bool, 3>, 3> BinaryOp::kernel_11_right = {{{0, 0, 1}, {0, 0, 1}, {0, 0, 1}}};
+const std::array<std::array<bool, 3>, 3> BinaryOp::kernel_11_up = {{{1, 1, 1}, {0, 0, 0}, {0, 0, 0}}};
+const std::array<std::array<bool, 3>, 3> BinaryOp::kernel_11_down = {{{0, 0, 0}, {0, 0, 0}, {1, 1, 1}}};
+const std::array<std::array<bool, 3>, 3> BinaryOp::kernel_11_complement = {{{0, 0, 0}, {0, 1, 0}, {0, 0, 0}}}; 
 
-const std::array<std::array<bool, 3>, 3> kernel_12_bottom = {{{0, 0, 0}, {0, 1, 0}, {1, 1, 1}}};
-const std::array<std::array<bool, 3>, 3> kernel_12_bottom_complement = {{{1, 1, 1}, {0, 0, 0}, {0, 0, 0}}};
+const std::array<std::array<bool, 3>, 3> BinaryOp::kernel_12_bottom = {{{0, 0, 0}, {0, 1, 0}, {1, 1, 1}}};
+const std::array<std::array<bool, 3>, 3> BinaryOp::kernel_12_bottom_complement = {{{1, 1, 1}, {0, 0, 0}, {0, 0, 0}}};
 
-const std::array<std::array<bool, 3>, 3> kernel_12_top = {{{1, 1, 1}, {0, 1, 0}, {0, 0, 0}}};
-const std::array<std::array<bool, 3>, 3> kernel_12_top_complement = {{{0, 0, 0}, {0, 0, 0}, {1, 1, 1}}};
+const std::array<std::array<bool, 3>, 3> BinaryOp::kernel_12_top = {{{1, 1, 1}, {0, 1, 0}, {0, 0, 0}}};
+const std::array<std::array<bool, 3>, 3> BinaryOp::kernel_12_top_complement = {{{0, 0, 0}, {0, 0, 0}, {1, 1, 1}}};
 
-const std::array<std::array<bool, 3>, 3> kernel_12_left = {{{1, 0, 0}, {1, 1, 0}, {1, 0, 0}}};
-const std::array<std::array<bool, 3>, 3> kernel_12_left_complement = {{{0, 0, 1}, {0, 0, 1}, {0, 0, 1}}};
+const std::array<std::array<bool, 3>, 3> BinaryOp::kernel_12_left = {{{1, 0, 0}, {1, 1, 0}, {1, 0, 0}}};
+const std::array<std::array<bool, 3>, 3> BinaryOp::kernel_12_left_complement = {{{0, 0, 1}, {0, 0, 1}, {0, 0, 1}}};
 
-const std::array<std::array<bool, 3>, 3> kernel_12_right = {{{0, 0, 1}, {0, 1, 1}, {0, 0, 1}}};
-const std::array<std::array<bool, 3>, 3> kernel_12_right_complement = {{{1, 0, 0}, {1, 0, 0}, {1, 0, 0}}};
+const std::array<std::array<bool, 3>, 3> BinaryOp::kernel_12_right = {{{0, 0, 1}, {0, 1, 1}, {0, 0, 1}}};
+const std::array<std::array<bool, 3>, 3> BinaryOp::kernel_12_right_complement = {{{1, 0, 0}, {1, 0, 0}, {1, 0, 0}}};
 
-const std::array<std::array<bool, 3>, 3> kernel_12_bottom_left = {{{0, 0, 0}, {1, 1, 0}, {1, 1, 0}}};
-const std::array<std::array<bool, 3>, 3> kernel_12_bottom_left_complement = {{{0, 1, 1}, {0, 0, 1}, {0, 0, 0}}};
+const std::array<std::array<bool, 3>, 3> BinaryOp::kernel_12_bottom_left = {{{0, 0, 0}, {1, 1, 0}, {1, 1, 0}}};
+const std::array<std::array<bool, 3>, 3> BinaryOp::kernel_12_bottom_left_complement = {{{0, 1, 1}, {0, 0, 1}, {0, 0, 0}}};
 
-const std::array<std::array<bool, 3>, 3> kernel_12_bottom_right = {{{0, 0, 0}, {0, 1, 1}, {0, 1, 1}}};
-const std::array<std::array<bool, 3>, 3> kernel_12_bottom_right_complement = {{{1, 1, 0}, {1, 0, 0}, {0, 0, 0}}};
+const std::array<std::array<bool, 3>, 3> BinaryOp::kernel_12_bottom_right = {{{0, 0, 0}, {0, 1, 1}, {0, 1, 1}}};
+const std::array<std::array<bool, 3>, 3> BinaryOp::kernel_12_bottom_right_complement = {{{1, 1, 0}, {1, 0, 0}, {0, 0, 0}}};
 
-const std::array<std::array<bool, 3>, 3> kernel_12_top_left = {{{1, 1, 0}, {1, 1, 0}, {0, 0, 0}}};
-const std::array<std::array<bool, 3>, 3> kernel_12_top_left_complement = {{{0, 0, 0}, {0, 0, 1}, {0, 1, 1}}};
+const std::array<std::array<bool, 3>, 3> BinaryOp::kernel_12_top_left = {{{1, 1, 0}, {1, 1, 0}, {0, 0, 0}}};
+const std::array<std::array<bool, 3>, 3> BinaryOp::kernel_12_top_left_complement = {{{0, 0, 0}, {0, 0, 1}, {0, 1, 1}}};
 
-const std::array<std::array<bool, 3>, 3> kernel_12_top_right = {{{0, 1, 1}, {0, 1, 1}, {0, 0, 0}}};
-const std::array<std::array<bool, 3>, 3> kernel_12_top_right_complement = {{{0, 0, 0}, {1, 0, 0}, {1, 1, 0}}};
+const std::array<std::array<bool, 3>, 3> BinaryOp::kernel_12_top_right = {{{0, 1, 1}, {0, 1, 1}, {0, 0, 0}}};
+const std::array<std::array<bool, 3>, 3> BinaryOp::kernel_12_top_right_complement = {{{0, 0, 0}, {1, 0, 0}, {1, 1, 0}}};

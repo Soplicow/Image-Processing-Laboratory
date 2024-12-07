@@ -88,18 +88,9 @@ TEST_CASE("BinaryOp::M7 - mandrilbw", "[M7]") {
     CImg<unsigned char> image("mandrilbw.bmp");
     std::array<std::array<bool, 3>, 3> kernel = {{{0, 1, 0}, {1, 1, 1}, {0, 1, 0}}};
     CImg<unsigned char> result = BinaryOp::M7(image, kernel);
-    CImg<unsigned char> result1 = BinaryOp::M7(image, kernel);
-    CImg<unsigned char> result2 = BinaryOp::M7(image, kernel);
-    CImg<unsigned char> result3 = BinaryOp::M7(image, kernel);
-    result.save_bmp("task3/mandrilbw_M7_1.bmp");
-    result1.save_bmp("task3/mandrilbw_M7_4.bmp");
-    result2.save_bmp("task3/mandrilbw_M7_7.bmp");
-    result3.save_bmp("task3/mandrilbw_M7_200.bmp");
+    result.save_bmp("task3/mandrilbw_M7.bmp");
 
     REQUIRE(image != result); // The result should not be the same as the input
-    REQUIRE(image != result1); // The result should not be the same as the input
-    REQUIRE(image != result2); // The result should not be the same as the input
-    REQUIRE(image != result3); // The result should not be the same as the input
 }
 
 TEST_CASE("BinaryOp::regionGrowing - lenabw", "[regionGrowing]") {

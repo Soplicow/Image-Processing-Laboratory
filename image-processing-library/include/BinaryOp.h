@@ -3,6 +3,7 @@
 
 #include <CImg.h>
 #include <array>
+#include <string>
 
 using namespace cimg_library;
 
