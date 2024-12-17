@@ -116,28 +116,29 @@ Write-Output "Running M7"
 & "$path_to_exe/ImageProcessing.exe" --input ../images/mandrilbw.bmp --output "$M7/mandrilbw_m7_6.bmp" --M7 6
 
 Write-Output "Running region growing"
-& "$path_to_exe/ImageProcessing.exe" --input ../images/lenac.bmp --output "$regionGrowing/lenac_region_growing_15_15_160_0.bmp" --regionGrowing 15 15 160 0
+Get-ChildItem -Path $regionGrowing -File | Remove-Item -Force
+& "$path_to_exe/ImageProcessing.exe" --input ../images/lenac.bmp --output "$regionGrowing/lenac_region_growing_15_15_160_0.bmp" --regionGrowing 15 15 60 0
 
-& "$path_to_exe/ImageProcessing.exe" --input ../images/lenac.bmp --output "$regionGrowing/lenac_region_growing_320_450_120_0.bmp" --regionGrowing 320 450 120 0
+& "$path_to_exe/ImageProcessing.exe" --input ../images/lenac.bmp --output "$regionGrowing/lenac_region_growing_320_450_120_0.bmp" --regionGrowing 320 450 45 0
 
 & "$path_to_exe/ImageProcessing.exe" --input ../images/mandrilc.bmp --output "$regionGrowing/mandrilc_region_growing_200_250_100_0.bmp" --regionGrowing 200 250 100 0
 
-& "$path_to_exe/ImageProcessing.exe" --input ../images/mandrilc.bmp --output "$regionGrowing/mandrilc_region_growing_250_250_162_0.bmp" --regionGrowing 250 250 162 0
+& "$path_to_exe/ImageProcessing.exe" --input ../images/mandrilc.bmp --output "$regionGrowing/mandrilc_region_growing_250_250_162_0.bmp" --regionGrowing 250 250 120 0
 
 
-& "$path_to_exe/ImageProcessing.exe" --input ../images/lenac.bmp --output "$regionGrowing/lenac_region_growing_15_15_300_1.bmp" --regionGrowing 15 15 300 1
+& "$path_to_exe/ImageProcessing.exe" --input ../images/lenac.bmp --output "$regionGrowing/lenac_region_growing_15_15_300_1.bmp" --regionGrowing 15 15 60 1
 
-& "$path_to_exe/ImageProcessing.exe" --input ../images/lenac.bmp --output "$regionGrowing/lenac_region_growing_320_450_160_1.bmp" --regionGrowing 320 450 160 1
+& "$path_to_exe/ImageProcessing.exe" --input ../images/lenac.bmp --output "$regionGrowing/lenac_region_growing_320_450_160_1.bmp" --regionGrowing 320 450 45 1
 
 & "$path_to_exe/ImageProcessing.exe" --input ../images/mandrilc.bmp --output "$regionGrowing/mandrilc_region_growing_200_250_100_1.bmp" --regionGrowing 200 250 100 1
 
-& "$path_to_exe/ImageProcessing.exe" --input ../images/mandrilc.bmp --output "$regionGrowing/mandrilc_region_growing_250_250_162_1.bmp" --regionGrowing 250 250 250 1
+& "$path_to_exe/ImageProcessing.exe" --input ../images/mandrilc.bmp --output "$regionGrowing/mandrilc_region_growing_250_250_162_1.bmp" --regionGrowing 250 250 190 1
 
 
-& "$path_to_exe/ImageProcessing.exe" --input ../images/lenac.bmp --output "$regionGrowing/lenac_region_growing_15_15_130_2.bmp" --regionGrowing 15 15 130 2
+& "$path_to_exe/ImageProcessing.exe" --input ../images/lenac.bmp --output "$regionGrowing/lenac_region_growing_15_15_130_2.bmp" --regionGrowing 15 15 50 2
 
-& "$path_to_exe/ImageProcessing.exe" --input ../images/lenac.bmp --output "$regionGrowing/lenac_region_growing_320_450_100_2.bmp" --regionGrowing 320 450 100 2
+& "$path_to_exe/ImageProcessing.exe" --input ../images/lenac.bmp --output "$regionGrowing/lenac_region_growing_320_450_100_2.bmp" --regionGrowing 320 450 45 2
 
-& "$path_to_exe/ImageProcessing.exe" --input ../images/mandrilc.bmp --output "$regionGrowing/mandrilc_region_growing_200_250_85_2.bmp" --regionGrowing 200 250 85 2
+& "$path_to_exe/ImageProcessing.exe" --input ../images/mandrilc.bmp --output "$regionGrowing/mandrilc_region_growing_200_250_85_2.bmp" --regionGrowing 200 250 100 2
 
-& "$path_to_exe/ImageProcessing.exe" --input ../images/mandrilc.bmp --output "$regionGrowing/mandrilc_region_growing_250_250_110_2.bmp" --regionGrowing 250 250 110 2
+& "$path_to_exe/ImageProcessing.exe" --input ../images/mandrilc.bmp --output "$regionGrowing/mandrilc_region_growing_250_250_110_2.bmp" --regionGrowing 250 250 90 2

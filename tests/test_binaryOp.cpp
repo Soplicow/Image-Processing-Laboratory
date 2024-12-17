@@ -95,8 +95,8 @@ TEST_CASE("BinaryOp::M7 - mandrilbw", "[M7]") {
 
 TEST_CASE("BinaryOp::regionGrowing - lenabw", "[regionGrowing]") {
     CImg<unsigned char> image("lenabw.bmp");
-    CImg<unsigned char> result1 = BinaryOp::regionGrowing(image, 250, 140, 0); // White region
-    CImg<unsigned char> result2 = BinaryOp::regionGrowing(image, 2, 300, 0); // Black region
+    CImg<unsigned char> result1 = BinaryOp::regionGrowing(image, 250, 140, 0, 2); // White region
+    CImg<unsigned char> result2 = BinaryOp::regionGrowing(image, 2, 300, 0, 2); // Black region
     
     result1.save_bmp("task3/lenabw_region1.bmp");
     result2.save_bmp("task3/lenabw_region2.bmp");
@@ -107,9 +107,9 @@ TEST_CASE("BinaryOp::regionGrowing - lenabw", "[regionGrowing]") {
 
 TEST_CASE("BinaryOp::regionGrowing - mandril", "[regionGrowing]") {
     CImg<unsigned char> image("mandril.bmp");
-    CImg<unsigned char> result1 = BinaryOp::regionGrowing(image, 180, 220, 50);
-    CImg<unsigned char> result2 = BinaryOp::regionGrowing(image, 30, 400, 10);
-    CImg<unsigned char> result3 = BinaryOp::regionGrowing(image, 100, 300, 40);
+    CImg<unsigned char> result1 = BinaryOp::regionGrowing(image, 180, 220, 50, 0);
+    CImg<unsigned char> result2 = BinaryOp::regionGrowing(image, 30, 400, 10, 0);
+    CImg<unsigned char> result3 = BinaryOp::regionGrowing(image, 100, 300, 40, 0);
 
     result1.save_bmp("task3/mandril_region1.bmp");
     result2.save_bmp("task3/mandril_region2.bmp");
@@ -122,9 +122,9 @@ TEST_CASE("BinaryOp::regionGrowing - mandril", "[regionGrowing]") {
 
 TEST_CASE("BinaryOp::regionGrowing - mandrilc", "[regionGrowing]") {
     CImg<unsigned char> image("mandrilc.bmp");
-    CImg<unsigned char> result1 = BinaryOp::regionGrowing(image, 256, 412, 255);
-    CImg<unsigned char> result2 = BinaryOp::regionGrowing(image, 30, 400, 50);
-    CImg<unsigned char> result3 = BinaryOp::regionGrowing(image, 100, 300, 40);
+    CImg<unsigned char> result1 = BinaryOp::regionGrowing(image, 256, 412, 255, 1);
+    CImg<unsigned char> result2 = BinaryOp::regionGrowing(image, 30, 400, 50, 1);
+    CImg<unsigned char> result3 = BinaryOp::regionGrowing(image, 100, 300, 40, 1);
 
     result1.save_bmp("task3/mandrilc_region1.bmp");
     result2.save_bmp("task3/mandrilc_region2.bmp");

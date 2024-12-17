@@ -624,7 +624,7 @@ int main(int argc, char* argv[]) {
                                 << "--closing [-structural_element=4]\n"
                                 << "--HMT [-structural_element_A=4] [-structural_element_complement=bottom-left]\n"
                                 << "--M7 [-structural_element=4]\n"
-                                << "--regionGrowing [-x=0] [-y=0] [-threshold=30]\n"
+                                << "--regionGrowing [-x=0] [-y=0] [-threshold=30] [-criterion=2]\n"
                                 << "--help\n";
                         return 0;
                 }

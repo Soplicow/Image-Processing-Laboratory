@@ -164,7 +164,9 @@ CImg<unsigned char> BinaryOp::regionGrowing(const CImg<unsigned char>& image, in
     CImg<unsigned char> result(image.width(), image.height(), 1, 1, 0); // Initialize to 0 (black)
     
     // Seed pixel intensity
-    unsigned char seedValue = image(seedX, seedY);
+    unsigned char seedValueR = image(seedX, seedY, 0, 0);
+    unsigned char seedValueG = image(seedX, seedY, 0, 1);
+    unsigned char seedValueB = image(seedX, seedY, 0, 2);
     result(seedX, seedY) = 255; // Mark the seed as part of the region (white)
     
     // Directions for 4-connectivity (up, down, left, right)
@@ -196,17 +198,19 @@ CImg<unsigned char> BinaryOp::regionGrowing(const CImg<unsigned char>& image, in
                 float distance;
 
                 if (criterion == 0) {
-                    distance = std::sqrt(std::pow(neighborValueR - seedValue, 2) + 
-                                    std::pow(neighborValueG - seedValue, 2) + 
-                                    std::pow(neighborValueB - seedValue, 2));
+                    distance = std::sqrt(std::pow(neighborValueR - seedValueR, 2) + 
+                                    std::pow(neighborValueG - seedValueG, 2) + 
+                                    std::pow(neighborValueB - seedValueB, 2));
                 } else if (criterion == 1) {
-                    distance = std::abs(neighborValueR - seedValue) + 
-                                    std::abs(neighborValueG - seedValue) + 
-                                    std::abs(neighborValueB - seedValue);
+                    distance = std::abs(neighborValueR - seedValueR) + 
+                                    std::abs(neighborValueG - seedValueG) + 
+                                    std::abs(neighborValueB - seedValueB);
                 } else if (criterion == 2) {
-                    distance = std::max({std::abs(neighborValueR - seedValue), 
-                                            std::abs(neighborValueG - seedValue), 
-                                            std::abs(neighborValueB - seedValue)});
+                    distance = std::max({std::abs(neighborValueR - seedValueR), 
+                                            std::abs(neighborValueG - seedValueG), 
+                                            std::abs(neighborValueB - seedValueB)});
+                } else {
+                    throw std::invalid_argument("Invalid criterion");
                 }
                 
                 if (distance <= threshold) {
