@@ -170,7 +170,7 @@ CImg<double> Frequency::computeSpectrum(CVector2D& input) {
     double maxMagnitude = 0;
     for (size_t i = 0; i < rows; i++) {
         for (size_t j = 0; j < cols; j++) {
-            magnitude[i][j] = log(1 + std::abs(input[i][j]));
+            magnitude[i][j] = std::abs(input[i][j]); // test: return to log later
         }
     }
 
@@ -208,7 +208,7 @@ CVector2D Frequency::reVecotrizeSpectrum(const CImg<double>& input, int channel)
     for (int y = 0; y < height; y++) {
         for (int x = 0; x < width; x++) {
             // get magnitude and phase
-            double magnitude = exp(image(x, y, 0)) - 1; // magnitude is log(1 + magnitude)
+            double magnitude = image(x, y, 0); // magnitude is log(1 + magnitude) // test return to previous version if needed
             double phase = image(x, y, 1); // phase is as it is
             // calculate real and imaginary parts
             newVector[y][x] = Complex(magnitude * cos(phase), magnitude * sin(phase));
@@ -401,23 +401,23 @@ CImg<unsigned char> Frequency::HighPassEdgeDetection(const CImg<unsigned char>& 
             spectrum(x, y, 1) = 0;
         }
 
-        // Apply edge direction filter
-        if (edgeDirection == 1) { // Horizontal edges
-            if (std::abs(y - cy) > radius) {
-                spectrum(x, y, 0) = 0;
-                spectrum(x, y, 1) = 0;
-            }
-        } else if (edgeDirection == 2) { // Vertical edges
-            if (std::abs(x - cx) > radius) {
-                spectrum(x, y, 0) = 0;
-                spectrum(x, y, 1) = 0;
-            }
-        } else if (edgeDirection == 3) { // Diagonal edges
-            if (std::abs(x - y) > radius) {
-                spectrum(x, y, 0) = 0;
-                spectrum(x, y, 1) = 0;
-            }
-        }
+        // // Apply edge direction filter
+        // if (edgeDirection == 1) { // Horizontal edges
+        //     if (std::abs(y - cy) > radius) {
+        //         spectrum(x, y, 0) = 0;
+        //         spectrum(x, y, 1) = 0;
+        //     }
+        // } else if (edgeDirection == 2) { // Vertical edges
+        //     if (std::abs(x - cx) > radius) {
+        //         spectrum(x, y, 0) = 0;
+        //         spectrum(x, y, 1) = 0;
+        //     }
+        // } else if (edgeDirection == 3) { // Diagonal edges
+        //     if (std::abs(x - y) > radius) {
+        //         spectrum(x, y, 0) = 0;
+        //         spectrum(x, y, 1) = 0;
+        //     }
+        // }
     }
 
     spectrum(cx, cy, 0) = DC_mag;
@@ -432,21 +432,24 @@ CImg<unsigned char> Frequency::PhaseMod(const CImg<unsigned char>& image, int k,
     int N = spectrum.width();
     int M = spectrum.height();
     
-    CVector2D mask(spectrum.height(), std::vector<Complex>(spectrum.width()));
+    CVector2D mask(M, std::vector<Complex>(N));
     for (int m = 0; m < M; m++) {
         for (int n = 0; n < N; n++) {
             double phase = -((n * k * 2 * M_PI) / N) - ((m * l * 2 * M_PI) / M) + (k + l) * M_PI;
-            mask[m][n] = std::polar(1.0, phase);
+            mask[m][n] = std::exp(j * phase); 
+            // Note to readers:
+            // std::exp(j * phase) == std::polar(1.0, phase) == std::exp(Complex(0, phase))
+            // because maths
         }
     }
 
     for (size_t m = 0; m < M; ++m) {
         for (size_t n = 0; n < N; ++n) {
-            Complex value = Complex(spectrum(n, m, 0), spectrum(n, m, 1));
+            Complex value = std::polar(spectrum(m, n, 0), spectrum(m, n, 1));
             value *= mask[m][n];
-            spectrum(n, m, 0) = value.real();
-            spectrum(n, m, 1) = value.imag();
-        }
+            spectrum(m, n, 0) = std::abs(value);
+            spectrum(m, n, 1) = std::arg(value);
+        } 
     }
 
     return IFFT(spectrum);

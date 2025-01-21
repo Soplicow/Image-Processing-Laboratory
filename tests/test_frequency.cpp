@@ -454,16 +454,16 @@ TEST_CASE("Task4 - raport", "[frequency]") {
         F5_3_HPED_2_30_3.save("task4/raport/F5_3_HPED_2_30_3.bmp");
     }
 
-    int k_factor = 6;
-    int l_factor = 4;
+    int k_factor = 20;
+    int l_factor = 20;
     CImg<unsigned char> mandril_phase_mod = Frequency::PhaseMod(mandril, k_factor, l_factor);
     CImg<unsigned char> lena_phase_mod = Frequency::PhaseMod(lena, k_factor, l_factor);
     CImg<unsigned char> boat_phase_mod = Frequency::PhaseMod(boat, k_factor, l_factor);
     CImg<unsigned char> camera_phase_mod = Frequency::PhaseMod(camera, k_factor, l_factor);
-    mandril_phase_mod.save("task4/raport/mandril_phase_mod_4_2.bmp");
-    lena_phase_mod.save("task4/raport/lena_phase_mod_4_2.bmp");
-    boat_phase_mod.save("task4/raport/boat_phase_mod_4_2.bmp");
-    camera_phase_mod.save("task4/raport/camera_phase_mod_4_2.bmp");
+    mandril_phase_mod.save("task4/raport/mandril_phase_mod.bmp");
+    lena_phase_mod.save("task4/raport/lena_phase_mod.bmp");
+    boat_phase_mod.save("task4/raport/boat_phase_mod.bmp");
+    camera_phase_mod.save("task4/raport/camera_phase_mod.bmp");
 
     REQUIRE(1 == 1);
 }
