@@ -29,6 +29,16 @@ message(STATUS "TIFF_LIBRARIES: ${TIFF_LIBRARIES}")
 # Dodaj plik wykonywalny
 add_executable(imageProcessing main.cpp)
 
+add_custom_command(TARGET imageProcessing POST_BUILD
+    COMMAND ${CMAKE_COMMAND} -E copy
+        ${CMAKE_SOURCE_DIR}/images/masks/F5mask1.bmp
+        $<TARGET_FILE_DIR:imageProcessing>/F5mask1.bmp
+
+    COMMAND ${CMAKE_COMMAND} -E copy
+        ${CMAKE_SOURCE_DIR}/images/masks/F5mask2.bmp
+        $<TARGET_FILE_DIR:imageProcessing>/F5mask2.bmp
+)
+
 # Połącz bibliotekę z plikiem wykonywalnym
 target_link_libraries(imageProcessing PRIVATE image-processing-library ${CIMG_LIBRARIES})
 target_link_libraries(imageProcessing PRIVATE image-processing-library ${TIFF_LIBRARIES})

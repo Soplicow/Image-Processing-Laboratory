@@ -671,16 +671,8 @@ int main(int argc, char* argv[]) {
 
                         try {
                                 int radius = std::stoi(*(pargv + 1));
-                                int mask = std::stoi(*(pargv + 2));
-                                CImg<unsigned char> maskImage;
-                                if (mask == 1) {
-                                        maskImage = CImg<unsigned char>("images/masks/F5mask1.bmp");
-                                } else if (mask == 2) {
-                                        maskImage = CImg<unsigned char>("images/masks/F5mask2.bmp");
-                                } else {
-                                        std::cerr << "Invalid mask: " << mask << "\n";
-                                        return 0;
-                                }
+                                char* maskName = (*(pargv + 2));
+                                CImg<unsigned char> maskImage(maskName);
                                 modifiedImage = Frequency::HighPassEdgeDetection(modifiedImage, maskImage, radius, 0);
                         } catch (const CImgIOException& e) {
                                 std::cerr << "Error loading image: " << e.what() << "\n";
