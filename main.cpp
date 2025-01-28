@@ -8,6 +8,7 @@
 #include "NonLinearSpatial.h"
 #include "Histogram.h"
 #include "BinaryOp.h"
+#include "Frequency.h"
 #include <chrono>
 
 #include <iostream>
@@ -586,6 +587,123 @@ int main(int argc, char* argv[]) {
                         continue;
                 }
 
+                if (std::string(*pargv).find("--magnitudeSpectrum") != std::string::npos) {
+                        try {
+                                modifiedImage = Frequency::MagnitudeSpectrum(modifiedImage);
+                        } catch (const CImgIOException& e) {
+                                std::cerr << "Error loading image: " << e.what() << "\n";
+                                return 0;
+                        }
+                        continue;
+                }
+
+                if (std::string(*pargv).find("--lowPass") != std::string::npos) {
+                        if (*(pargv + 1) == argv[argc]) {
+                                std::cerr << "Usage: " << "--lowPassFilter " << "[-radius=30]" << "\n";
+                                return 0;
+                        }
+
+                        try {
+                                int radius = std::stoi(*(pargv + 1));
+                                modifiedImage = Frequency::LowPass(modifiedImage, radius);
+                        } catch (const CImgIOException& e) {
+                                std::cerr << "Error loading image: " << e.what() << "\n";
+                                return 0;
+                        }
+                        continue;
+                }
+
+                if (std::string(*pargv).find("--highPass") != std::string::npos) {
+                        if (*(pargv + 1) == argv[argc]) {
+                                std::cerr << "Usage: " << "--highPassFilter " << "[-radius=30]" << "\n";
+                                return 0;
+                        }
+
+                        try {
+                                int radius = std::stoi(*(pargv + 1));
+                                modifiedImage = Frequency::HighPass(modifiedImage, radius);
+                        } catch (const CImgIOException& e) {
+                                std::cerr << "Error loading image: " << e.what() << "\n";
+                                return 0;
+                        }
+                        continue;
+                }
+
+                if (std::string(*pargv).find("--bandPass") != std::string::npos) {
+                        if (*(pargv + 1) == argv[argc] || *(pargv + 2) == argv[argc]) {
+                                std::cerr << "Usage: " << "--bandPassFilter " << "[-low=30]" << "[-high=50]" << "\n";
+                                return 0;
+                        }
+
+                        try {
+                                int low = std::stoi(*(pargv + 1));
+                                int high = std::stoi(*(pargv + 2));
+                                modifiedImage = Frequency::BandPass(modifiedImage, low, high);
+                        } catch (const CImgIOException& e) {
+                                std::cerr << "Error loading image: " << e.what() << "\n";
+                                return 0;
+                        }
+                        continue;
+                }
+
+                if (std::string(*pargv).find("--bandCut") != std::string::npos) {
+                        if (*(pargv + 1) == argv[argc] || *(pargv + 2) == argv[argc]) {
+                                std::cerr << "Usage: " << "--bandCutFilter " << "[-low=30]" << "[-high=50]" << "\n";
+                                return 0;
+                        }
+
+                        try {
+                                int low = std::stoi(*(pargv + 1));
+                                int high = std::stoi(*(pargv + 2));
+                                modifiedImage = Frequency::BandCut(modifiedImage, low, high);
+                        } catch (const CImgIOException& e) {
+                                std::cerr << "Error loading image: " << e.what() << "\n";
+                                return 0;
+                        }
+                        continue;
+                }
+
+                if (std::string(*pargv).find("--HPED") != std::string::npos) {
+                        if (*(pargv + 1) == argv[argc] || *(pargv + 2) == argv[argc]) {
+                                std::cerr << "Usage: " << "--HPED " << "[-radius=30]" << "[-mask=1]" << "\n";
+                                return 0;
+                        }
+
+                        try {
+                                int radius = std::stoi(*(pargv + 1));
+                                int mask = std::stoi(*(pargv + 2));
+                                CImg<unsigned char> maskImage;
+                                if (mask == 1) {
+                                        maskImage = CImg<unsigned char>("images/masks/F5mask1.bmp");
+                                } else if (mask == 2) {
+                                        maskImage = CImg<unsigned char>("images/masks/F5mask2.bmp");
+                                } else {
+                                        std::cerr << "Invalid mask: " << mask << "\n";
+                                        return 0;
+                                }
+                                modifiedImage = Frequency::HighPassEdgeDetection(modifiedImage, maskImage, radius, 0);
+                        } catch (const CImgIOException& e) {
+                                std::cerr << "Error loading image: " << e.what() << "\n";
+                                return 0;
+                        }
+                }
+
+                if (std::string(*pargv).find("--phaseMod") != std::string::npos) {
+                        if (*(pargv + 1) == argv[argc] || *(pargv + 2) == argv[argc]) {
+                                std::cerr << "Usage: " << "--phaseMod " << "[-k=30]" << "[-l=20]" << "\n";
+                                return 0;
+                        }
+
+                        try {
+                                int k = std::stoi(*(pargv + 1));
+                                int l = std::stoi(*(pargv + 2));
+                                modifiedImage = Frequency::PhaseMod(modifiedImage, k, l);
+                        } catch (const CImgIOException& e) {
+                                std::cerr << "Error loading image: " << e.what() << "\n";
+                                return 0;
+                        }
+                }
+
                 if (std::string(*pargv).find("--help") != std::string::npos) {
                         std::cout << "Available commands:\n"
                                 << "--input <image.bmp>\n"
@@ -625,6 +743,13 @@ int main(int argc, char* argv[]) {
                                 << "--HMT [-structural_element_A=4] [-structural_element_complement=bottom-left]\n"
                                 << "--M7 [-structural_element=4]\n"
                                 << "--regionGrowing [-x=0] [-y=0] [-threshold=30] [-criterion=2]\n"
+                                << "--magnitudeSpectrum\n"
+                                << "--lowPass [-radius=30]\n"
+                                << "--highPass [-radius=30]\n"
+                                << "--bandPass [-low=30] [-high=50]\n"
+                                << "--bandCut [-low=30] [-high=50]\n"
+                                << "--HPED [-radius=30] [-mask=1]\n"
+                                << "--phaseMod [-k=30] [-l=20]\n"
                                 << "--help\n";
                         return 0;
                 }
